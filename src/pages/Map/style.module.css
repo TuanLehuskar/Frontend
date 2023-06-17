@@ -1,0 +1,88 @@
+* {
+  font-family: "Quicksand";
+  font-weight: 500;
+}
+.map-wrap {
+  width: 100%;
+  height: 75vh;
+  position: relative;
+}
+
+.map {
+  position: relative;
+  z-index: 1;
+}
+.box-wrap-1 {
+  font-family: "Quicksand";
+  font-weight: bold;
+  background: #4a746e;
+  height: 120px;
+  border-radius: 12px;
+  font-size: 1.4rem;
+}
+.box-wrap-2 {
+  font-family: "Quicksand";
+  font-weight: bold;
+  background: #9ad1aa;
+  height: 120px;
+  border-radius: 12px;
+  font-size: 1.4rem;
+}
+.box-wrap-3 {
+  font-family: "Quicksand";
+  font-weight: bold;
+  background: #9fa180;
+  height: 120px;
+  border-radius: 12px;
+  font-size: 1.4rem;
+}
+.box-wrap-4 {
+  font-family: "Quicksand";
+  font-weight: bold;
+  background: #8b76a5;
+  height: 120px;
+  border-radius: 12px;
+  font-size: 1.4rem;
+}
+.box-wrap-5 {
+  font-family: "Quicksand";
+  font-weight: bold;
+  height: 120px;
+  border-radius: 12px;
+  font-size: 1.2rem;
+}
+
+.icon {
+  color: white;
+}
+.unit-common-position {
+  position: absolute;
+  font-size: 1.2rem;
+  bottom: 8px;
+  right: 16px;
+}
+
+.unit-position {
+  position: absolute;
+  font-size: 1.4rem;
+  bottom: 8px;
+  right: 16px;
+}
+
+.temperature {
+  background: #ea5656;
+  height: 120px;
+  border-radius: 12px 0px 0px 12px;
+  color: white;
+}
+
+.tem-text {
+  font-size: 1.7rem;
+}
+
+.humidity {
+  background: #8cdadb;
+  height: 120px;
+  border-radius: 0px 12px 12px 0px;
+  color: white;
+}

@@ -1,0 +1,12 @@
+.warning-wrap {
+  margin-left: 20%;
+}
+
+.warning-component {
+  border: 2px solid red;
+  border-radius: 10px;
+}
+
+.warning-content {
+  margin-bottom: 0 !important;
+}

@@ -1,0 +1,18 @@
+.dashboard {
+  /* background: linear-gradient(180deg, #d3d5fd 20%, #62929a 63%); */
+  background-color: #e9fadd;
+  height: 100% !important;
+  overflow: hidden;
+}
+
+.active {
+  background: #469b4c;
+  color: white !important;
+}
+
+button {
+  margin: 0 0.2rem;
+  border-radius: 4px;
+  border: 2px solid #469b4c;
+  background: white;
+}

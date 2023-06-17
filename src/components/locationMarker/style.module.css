@@ -1,0 +1,10 @@
+.locate-button {
+  position: absolute;
+  top: 10rem;
+  left: 4px;
+  z-index: 9999;
+  padding: 0 0.5rem;
+  font-size: 1.6rem;
+  background-color: white;
+  color: #469b4c;
+}

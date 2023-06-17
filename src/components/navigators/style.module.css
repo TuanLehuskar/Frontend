@@ -1,0 +1,95 @@
+.navigator-container {
+  height: 100%;
+  width: 250px;
+  position: absolute;
+  background: #161616;
+  z-index: 10;
+  transition: 0.5s ease;
+  transform: translateX(-250px);
+}
+
+.navigator-container .menu {
+  color: #fbfdce;
+  font-size: 24px;
+  font-weight: bold;
+  padding: 24px;
+  text-transform: uppercase;
+  text-align: center;
+  letter-spacing: 1px;
+  background: linear-gradient(30deg, #ef709b, #fa9372);
+}
+
+.navigator-container ol {
+  list-style: none;
+  width: 100%;
+  padding-left: 0 !important;
+}
+
+.navigator-container ol li {
+  display: block;
+  width: 100%;
+  padding: 0 20px;
+}
+
+.navigator-container .nav-component {
+  display: block;
+  color: #fbfdce;
+  padding: 15px 10px;
+  text-decoration: none;
+  font-size: 16px;
+  letter-spacing: 1px;
+  position: relative;
+  transition: 0.3s;
+  overflow: hidden;
+}
+
+.navigator-container ol li:hover {
+  background: #030303;
+}
+
+.navigator-container ol li:hover .nav-component {
+  color: white;
+}
+
+input {
+  visibility: hidden;
+  display: none;
+}
+
+.close-icon {
+  position: absolute;
+  right: -40px;
+  top: 110px;
+  font-size: 25px;
+  border-radius: 3px;
+  color: #fff;
+  padding: 3px 8px;
+  cursor: pointer;
+  background: #000;
+}
+
+.toggle-icon {
+  position: absolute;
+  right: -40px;
+  top: 110px;
+  font-size: 25px;
+  border-radius: 3px;
+  color: #fff;
+  padding: 3px 8px;
+  cursor: pointer;
+  background: #000;
+  z-index: 2;
+}
+
+#bars {
+  background: red;
+}
+input:checked ~ .navigator-container {
+  transform: translateX(0);
+  z-index: 2;
+}
+
+input:checked ~ .navigator-container .toggle-icon {
+  display: none;
+  z-index: 2;
+}
