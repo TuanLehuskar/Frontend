@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"; // nạp thư viện react
+import React, { useState, useEffect, useRef } from "react"; // nạp thư viện react
 import ReactDOM from "react-dom/client"; // nạp thư viện react-dom
 import {
   MapContainer,
@@ -24,6 +24,7 @@ import { DUT_2_PAGE_PATH } from "../Dashboard/SubPage/DUTPage2/constant";
 import { DUT_3_PAGE_PATH } from "../Dashboard/SubPage/DUTPage3/constant";
 import { DUT_4_PAGE_PATH } from "../Dashboard/SubPage/DUTPage4/constant";
 import GetLocationButton from "../../components/locationMarker/LocationMarker.jsx";
+import ZoomToLocation from "../../components/zoomToLocation/ZoomToLocation.jsx";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 function Map() {
@@ -138,25 +139,38 @@ function Map() {
     const markerIds = [1, 2, 3, 4]; // ID của các marker cần kiểm tra
     const pm25Thresholds = [36, 36, 36, 36]; // Ngưỡng PM 2.5 tương ứng cho từng marker
     const pm10Thresholds = [155, 155, 155, 155]; // Ngưỡng PM 10 tương ứng cho từng marker
-
+    const COThresholds = [35, 35, 35, 35];
+    const poisonGasThresholds = [100, 100, 100, 100];
     const intervals = markerIds.map((markerId, index) => {
       const pm25Threshold = pm25Thresholds[index];
       const pm10Threshold = pm10Thresholds[index];
-
+      const COThreshold = COThresholds[index];
+      const poisonGasThreshold = poisonGasThresholds[index];
       const interval = setInterval(() => {
-        // Gọi hàm kiểm tra cảnh báo
-        checkWarning(markerId, pm25Threshold, pm10Threshold);
-      }, 15000);
+        checkWarning(
+          markerId,
+          pm25Threshold,
+          pm10Threshold,
+          COThreshold,
+          poisonGasThreshold
+        );
+      }, 20000);
 
       return interval;
     });
 
-    // Trả về một hàm trong useEffect để dọn dẹp tất cả các interval khi component unmount
     return () => {
       intervals.forEach((interval) => clearInterval(interval));
     };
   }, []);
-  const checkWarning = async (markerId, pm25Threshold, pm10Threshold) => {
+
+  const checkWarning = async (
+    markerId,
+    pm25Threshold,
+    pm10Threshold,
+    COThreshold,
+    poisonGasThreshold
+  ) => {
     try {
       // Gọi API Axios về backend với ID của marker
       const response = await axios.get(
@@ -165,24 +179,81 @@ function Map() {
       const data = response.data;
       const pm25Values = data.pm25.map((item) => item.value);
       const pm10Values = data.pm10.map((item) => item.value);
+      const COValues = data.CO.map((item) => item.value);
+      const poisonGasValues = data.poisonGas.map((item) => item.value);
 
       const lastPM25Value = pm25Values.pop();
       const lastPM10Value = pm10Values.pop();
+      const lastCOValue = COValues.pop();
+      const lastPoisonGasValue = poisonGasValues.pop();
 
       if (lastPM25Value >= pm25Threshold) {
         toast.error(
           `Nồng độ bụi mịn PM 2.5 ở vị trí DUT-${markerId} ở mức gây hại sức khỏe!`
-        );
-      } else if (lastPM10Value >= pm10Threshold) {
+        ),
+          {
+            onClick: () => handleToastClick(markerId),
+          };
+      }
+      if (lastPM10Value >= pm10Threshold) {
         toast.error(
           `Nồng độ bụi thô PM 10 ở vị trí DUT-${markerId} ở mức gây hại sức khỏe!`
+        ),
+          {
+            onClick: () => handleToastClick(markerId),
+          };
+      }
+      if (lastCOValue >= COThreshold) {
+        toast.error(
+          `Nồng độ khí CO ở vị trí DUT-${markerId} ở mức gây hại sức khỏe!`
+        ),
+          {
+            onClick: () => handleToastClick(markerId),
+          };
+      }
+      if (lastPoisonGasValue >= poisonGasThreshold) {
+        toast.error(
+          `Nồng độ khí độc ở vị trí DUT-${markerId} ở mức gây hại sức khỏe!`,
+          {
+            onClick: () => handleToastClick(markerId),
+          }
         );
       }
     } catch (error) {
       console.error(error);
     }
   };
+  const handleToastClick = (markerId) => {
+    flyToMarker(markerId);
+  };
+  const mapRef = useRef(null);
 
+  const flyToMarker = (markerId) => {
+    const marker = markers.find((marker) => marker.id === markerId);
+    if (marker) {
+      const map = mapRef.current;
+      if (map) {
+        map.flyTo(marker.geoCode, 15, {
+          duration: 1.5,
+          easeLinearity: 0.5,
+          zoomSnap: 0.5,
+        });
+      }
+    }
+  };
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const response = await axios.get("http://localhost:8000/");
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    const intervalTime = 15000;
+    const interval = setInterval(getData, intervalTime);
+
+    return () => clearInterval(interval);
+  }, []);
   //Locate
   const [location, setLocation] = useState(null);
   return (
@@ -199,7 +270,6 @@ function Map() {
         />
         {markers.map((marker) => (
           <Marker
-            // onClick={() => handleMarkerClick(marker.id)}
             eventHandlers={{
               click: () => handleMarkerClick(marker.id),
             }}
@@ -364,7 +434,11 @@ function Map() {
           </div>
         </div>
       </div>
-      <ToastContainer />
+      <ToastContainer
+        autoClose={8000}
+        closeOnClick={false}
+        pauseOnFocusLoss={false}
+      />
     </div>
   );
 }

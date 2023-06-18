@@ -52,37 +52,26 @@ function Dashboard() {
   const [dayOffset, setDayOffset] = useState(-24);
   const handleDateChange = (event) => {
     setSelectedDate(event.target.value);
-    if (event.target.value === formatDate(new Date())) {
+    if (event.target.value === today()) {
       setDayOffset(-24);
-    } else {
+    } else if (event.target.value === yesterday()) {
       setDayOffset(-48);
     }
   };
 
-  const today = formatDate(new Date());
-  const yesterday = () => {
+  const today = () => {
     const date = new Date();
     date.setDate(date.getDate() - 1);
     return formatDate(date);
   };
+  const yesterday = () => {
+    const date = new Date();
+    date.setDate(date.getDate() - 2);
+    return formatDate(date);
+  };
 
-  // const defineDownloadData = () => {
-  //   let downloadData;
-  //   if (activeComponent === "Component1") {
-  //     downloadData = data1;
-  //   } else if (activeComponent === "Component2") {
-  //     downloadData = data2;
-  //   } else if (activeComponent === "Component3") {
-  //     downloadData = data3;
-  //   } else {
-  //     downloadData = data4;
-  //   }
-  //   return downloadData;
-  // };
   //Download data
   const handleDownload = () => {
-    // Thực hiện các bước tải xuống dữ liệu ở đây
-    // const data = "Dữ liệu mẫu"; // Thay thế bằng dữ liệu bạn muốn tải xuống
     let data;
     if (activeComponent === "Component1") {
       data = data1;
@@ -93,19 +82,16 @@ function Dashboard() {
     } else {
       data = data4;
     }
-    // Tạo một URL tạm thời cho dữ liệu
     const url = URL.createObjectURL(
       new Blob([JSON.stringify(data)], { type: "application/json" })
     );
 
-    // Tạo một thẻ a ẩn để tải xuống dữ liệu
     const link = document.createElement("a");
     link.href = url;
-    link.setAttribute("download", "data.txt"); // Tên tệp tải xuống
+    link.setAttribute("download", "data.txt"); //
     document.body.appendChild(link);
     link.click();
 
-    // Xóa URL tạm thời
     URL.revokeObjectURL(url);
     document.body.removeChild(link);
   };
@@ -145,6 +131,7 @@ function Dashboard() {
           DUT 4
         </button>
         <button
+          className={style["download-btn"]}
           onClick={handleDownload}
           disabled={Object.keys(data1).length !== 0 ? false : true}
         >
@@ -155,7 +142,7 @@ function Dashboard() {
           value={selectedDate}
           onChange={handleDateChange}
         >
-          <option value={today}>{today}</option>
+          <option value={today()}>{today()}</option>
           <option value={yesterday()}>{yesterday()}</option>
         </select>
       </div>

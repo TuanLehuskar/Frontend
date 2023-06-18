@@ -16,3 +16,8 @@ button {
   border: 2px solid #469b4c;
   background: white;
 }
+
+.download-btn:active {
+  background: #469b4c;
+  color: white;
+}
