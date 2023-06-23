@@ -1,5 +1,14 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const { EnvironmentPlugin } = require("webpack");
+const dotEnv = require("dotenv");
+
+if (process.env.NODE_ENV == "production") {
+  dotEnv.config({ path: "./config.env" });
+} else {
+  dotEnv.config({ path: "./local.env" });
+}
+
 module.exports = {
   entry: "./src/index.js", // Dẫn tới file index.js ta đã tạo
   output: {
@@ -31,6 +40,9 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: "./public/index.html",
+    }),
+    new EnvironmentPlugin({
+      HOST: process.env.HOST,
     }),
   ],
 };

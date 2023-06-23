@@ -1,0 +1,107 @@
+const mockData = [
+  {
+    id: "quan_lien_chieu",
+    name: "Quận Liên Chiểu",
+    wards: [
+      { id: "phuong_hoa_hiep_bac", name: "Phường Hòa Hiệp Bắc" },
+      { id: "phuong_hoa_hiep_nam", name: "Phường Hòa Hiệp Nam" },
+      { id: "phuong_hoa_khanh_bac", name: "Phường Hòa Khánh Bắc" },
+      { id: "phuong_hoa_khanh_nam", name: "Phường Hòa Khánh Nam" },
+      { id: "phuong_hoa_minh", name: "Phường Hòa Minh" },
+    ],
+  },
+  {
+    id: "quan_thanh_khe",
+    name: "Quận Thanh Khê",
+    wards: [
+      { id: "phuong_tam_thuan", name: "Phường Tam Thuận" },
+      { id: "phuong_thanh_khe_tay", name: "Phường Thanh Khê Tây" },
+      { id: "phuong_thanh_khe_dong", name: "Phường Thanh Khê Đông" },
+      { id: "phuong_xuan_ha", name: "Phường Xuân Hà" },
+      { id: "phuong_tan_chinh", name: "Phường Tân Chính" },
+      { id: "phuong_chinh_gian", name: "Phường Chính Gián" },
+      { id: "phuong_vinh_trung", name: "Phường Vĩnh Trung" },
+      { id: "phuong_thac_gian", name: "Phường Thạc Gián" },
+      { id: "phuong_an_khe", name: "Phường An Khê" },
+      { id: "phuong_hoa_khe", name: "Phường Hòa Khê" },
+    ],
+  },
+  {
+    id: "quan_hai_chau",
+    name: "Quận Hải Châu",
+    wards: [
+      { id: "phuong_thanh_binh", name: "Phường Thanh Bình" },
+      { id: "phuong_thuan_phuoc", name: "Phường Thuận Phước" },
+      { id: "phuong_thach_thang", name: "Phường Thạch Thang" },
+      { id: "phuong_hai_chau_i", name: "Phường Hải Châu I" },
+      { id: "phuong_hai_chau_ii", name: "Phường Hải Châu II" },
+      { id: "phuong_phuoc_ninh", name: "Phường Phước Ninh" },
+      { id: "phuong_hoa_thuan_tay", name: "Phường Hòa Thuận Tây" },
+      { id: "phuong_hoa_thuan_dong", name: "Phường Hòa Thuận Đông" },
+      { id: "phuong_nam_duong", name: "Phường Nam Dương" },
+      { id: "phuong_binh_hien", name: "Phường Bình Hiên" },
+      { id: "phuong_binh_thuan", name: "Phường Bình Thuận" },
+      { id: "phuong_hoa_cuong_bac", name: "Phường Hòa Cường Bắc" },
+      { id: "phuong_hoa_cuong_nam", name: "Phường Hòa Cường Nam" },
+    ],
+  },
+  {
+    id: "quan_son_tra",
+    name: "Quận Sơn Trà",
+    wards: [
+      { id: "phuong_tho_quang", name: "Phường Thọ Quang" },
+      { id: "phuong_nai_hien_dong", name: "Phường Nại Hiên Đông" },
+      { id: "phuong_man_thai", name: "Phường Mân Thái" },
+      { id: "phuong_an_hai_bac", name: "Phường An Hải Bắc" },
+      { id: "phuong_phuoc_my", name: "Phường Phước Mỹ" },
+      { id: "phuong_an_hai_tay", name: "Phường An Hải Tây" },
+      { id: "phuong_an_hai_dong", name: "Phường An Hải Đông" },
+    ],
+  },
+  {
+    id: "quan_ngu_hanh_son",
+    name: "Quận Ngũ Hành Sơn",
+    wards: [
+      { id: "phuong_my_an", name: "Phường Mỹ An" },
+      { id: "phuong_khue_my", name: "Phường Khuê Mỹ" },
+      { id: "phuong_hoa_quy", name: "Phường Hoà Quý" },
+      { id: "phuong_hoa_hai", name: "Phường Hoà Hải" },
+    ],
+  },
+  {
+    id: "quan_cam_le",
+    name: "Quận Cẩm Lệ",
+    wards: [
+      { id: "phuong_khue_trung", name: "Phường Khuê Trung" },
+      { id: "phuong_hoa_phat", name: "Phường Hòa Phát" },
+      { id: "phuong_hoa_an", name: "Phường Hòa An" },
+      { id: "phuong_hoa_tho_tay", name: "Phường Hòa Thọ Tây" },
+      { id: "phuong_hoa_tho_dong", name: "Phường Hòa Thọ Đông" },
+      { id: "phuong_hoa_xuan", name: "Phường Hòa Xuân" },
+    ],
+  },
+  {
+    id: "huyen_hoa_vang",
+    name: "Huyện Hòa Vang",
+    wards: [
+      { id: "xa_hoa_bac", name: "Xã Hòa Bắc" },
+      { id: "xa_hoa_lien", name: "Xã Hòa Liên" },
+      { id: "xa_hoa_ninh", name: "Xã Hòa Ninh" },
+      { id: "xa_hoa_son", name: "Xã Hòa Sơn" },
+      { id: "xa_hoa_nhon", name: "Xã Hòa Nhơn" },
+      { id: "xa_hoa_phu", name: "Xã Hòa Phú" },
+      { id: "xa_hoa_phong", name: "Xã Hòa Phong" },
+      { id: "xa_hoa_chau", name: "Xã Hòa Châu" },
+      { id: "xa_hoa_tien", name: "Xã Hòa Tiến" },
+      { id: "xa_hoa_phuoc", name: "Xã Hòa Phước" },
+      { id: "xa_hoa_khuong", name: "Xã Hòa Khương" },
+    ],
+  },
+  {
+    id: "huyen_hoang_sa",
+    name: "Huyện Hoàng Sa",
+    wards: [], // Chưa có dữ liệu phường xã
+  },
+];
+
+export default mockData;

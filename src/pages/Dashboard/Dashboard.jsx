@@ -11,6 +11,9 @@ import DUT1Page from "./SubPage/DUTPage1/DUT1Page.jsx";
 import DUT2Page from "./SubPage/DUTPage2/DUT2Page.jsx";
 import DUT3Page from "./SubPage/DUTPage3/DUT3Page.jsx";
 import DUT4Page from "./SubPage/DUTPage4/DUT4Page.jsx";
+import CandlestickChart from "../../components/charts/candleChart";
+import DistrictSelector from "../../components/districtLocating/districtLocating.jsx";
+import mockData from "../../components/mockData";
 function Dashboard() {
   const [activeComponent, setActiveComponent] = useState("Component1");
 
@@ -25,13 +28,13 @@ function Dashboard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response1 = await axios.get("http://localhost:8000/diagram/1");
+        const response1 = await axios.get(`${process.env.HOST}/diagram/1`);
         setData1(response1.data);
-        const response2 = await axios.get("http://localhost:8000/diagram/2");
+        const response2 = await axios.get(`${process.env.HOST}/diagram/2`);
         setData2(response2.data);
-        const response3 = await axios.get("http://localhost:8000/diagram/3");
+        const response3 = await axios.get(`${process.env.HOST}/diagram/3`);
         setData3(response3.data);
-        const response4 = await axios.get("http://localhost:8000/diagram/4");
+        const response4 = await axios.get(`${process.env.HOST}/diagram/4`);
         setData4(response4.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -95,10 +98,15 @@ function Dashboard() {
     URL.revokeObjectURL(url);
     document.body.removeChild(link);
   };
+  const [selectedOption, setSelectedOption] = useState("");
+
+  const handleOptionChange = (event) => {
+    setSelectedOption(event.target.value);
+  };
   return (
     <div className={style["dashboard"]}>
       <div className="ms-5 mt-5">
-        <button
+        {/* <button
           onClick={() => handleComponentClick("Component1")}
           className={
             activeComponent === "Component1" ? style["active"] : style[""]
@@ -129,7 +137,7 @@ function Dashboard() {
           }
         >
           DUT 4
-        </button>
+        </button> */}
         <button
           className={style["download-btn"]}
           onClick={handleDownload}
@@ -145,6 +153,16 @@ function Dashboard() {
           <option value={today()}>{today()}</option>
           <option value={yesterday()}>{yesterday()}</option>
         </select>
+        <select
+          className="ms-1"
+          value={selectedOption}
+          onChange={handleOptionChange}
+        >
+          <option value="">-- Chọn Ngày --</option>
+          <option value="1">1 ngày</option>
+          <option value="7">7 ngày</option>
+        </select>
+        <DistrictSelector districts={mockData} />
       </div>
       {activeComponent === "Component1" && (
         <DUT1Page data={data1} day={dayOffset} />
@@ -158,6 +176,7 @@ function Dashboard() {
       {activeComponent === "Component4" && (
         <DUT4Page data={data4} day={dayOffset} />
       )}
+      {/* <CandlestickChart /> */}
     </div>
   );
 }

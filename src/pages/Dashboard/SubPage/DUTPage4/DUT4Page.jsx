@@ -11,7 +11,7 @@ function DUT4Page(props) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/diagram/4");
+        const response = await axios.get(`${process.env.HOST}/diagram/4`);
         setDataAPI(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);

@@ -27,30 +27,32 @@ import GetLocationButton from "../../components/locationMarker/LocationMarker.js
 import ZoomToLocation from "../../components/zoomToLocation/ZoomToLocation.jsx";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { setToastToLocalStorage } from "../../components/toastMessage/toastUtils";
+
 function Map() {
   const markers = [
     {
       id: 1,
-      geoCode: [16.07489869581357, 108.15175951170275],
-      popup: "DUT-1",
+      geoCode: [16.09004, 108.146262],
+      popup: "HKB-1",
       path: DUT_1_PAGE_PATH,
     },
     {
       id: 2,
-      geoCode: [16.0757176185992, 108.153703320611],
-      popup: "DUT-2",
+      geoCode: [16.073119, 108.151242],
+      popup: "HKB-2",
       path: DUT_2_PAGE_PATH,
     },
     {
       id: 3,
-      geoCode: [16.077086462870547, 108.15213504320542],
-      popup: "DUT-3",
+      geoCode: [16.076239, 108.126125],
+      popup: "HKB-3",
       path: DUT_3_PAGE_PATH,
     },
     {
       id: 4,
-      geoCode: [16.0759008729407, 108.15245570733465],
-      popup: "DUT-center",
+      geoCode: [16.080747, 108.140488],
+      popup: "HKB-Center",
       path: DUT_4_PAGE_PATH,
     },
     // { id: 5, geoCode: [16.061063, 108.223943], popup: "Rong Bridge" },
@@ -74,7 +76,7 @@ function Map() {
     setMarkerPosition({ lat, lng });
 
     try {
-      const response = await axios.post("http://localhost:8000/click", {
+      const response = await axios.post(`${process.env.HOST}/click`, {
         lat,
         lng,
         markers: markers,
@@ -91,70 +93,51 @@ function Map() {
 
     return null;
   }
-  const [circleColor, setCircleColor] = useState("green");
   const [permanentData, setPermanentData] = useState({});
   const handleMarkerClick = async (markerId) => {
     try {
       // Gọi API Axios về backend với ID của marker
       const response = await axios.get(
-        `http://localhost:8000/api/markers/${markerId}`
+        `${process.env.HOST}/api/markers/${markerId}`
       );
       const data = response.data;
-      const temperatureValues = data.temperature.map((item) => item.value);
-      const humidityValues = data.humidity.map((item) => item.value);
-      const pm25Values = data.pm25.map((item) => item.value);
-      const pm10Values = data.pm10.map((item) => item.value);
-      const COValues = data.CO.map((item) => item.value);
-      const poisonGasValues = data.poisonGas.map((item) => item.value);
-
-      const lastTemperatureValue = temperatureValues.pop();
-      const lastHumidityValue = humidityValues.pop();
-      const lastPM25Value = pm25Values.pop();
-      const lastPM10Value = pm10Values.pop();
-      const lastCOValue = COValues.pop();
-      const lastPoisonGasValue = poisonGasValues.pop();
-
-      const resultObject = {
-        lastTemperature: lastTemperatureValue,
-        lastHumidity: lastHumidityValue,
-        lastPM25: lastPM25Value,
-        lastPM10: lastPM10Value,
-        lastCO: lastCOValue,
-        lastPoisonGas: lastPoisonGasValue,
-      };
-      const maxValue = Math.max(
-        lastTemperatureValue,
-        lastHumidityValue,
-        lastPM25Value,
-        lastCOValue,
-        lastPoisonGasValue
-      );
+      const resultObject = data;
       setPermanentData(resultObject);
       setDataMarkers([]);
     } catch (error) {
       console.error(error);
     }
   };
+
   useEffect(() => {
     const markerIds = [1, 2, 3, 4]; // ID của các marker cần kiểm tra
     const pm25Thresholds = [36, 36, 36, 36]; // Ngưỡng PM 2.5 tương ứng cho từng marker
     const pm10Thresholds = [155, 155, 155, 155]; // Ngưỡng PM 10 tương ứng cho từng marker
-    const COThresholds = [35, 35, 35, 35];
+    const COThresholds = [40, 40, 40, 40];
     const poisonGasThresholds = [100, 100, 100, 100];
+    const markerPagePathThresholds = [
+      [16.07489869581357, 108.15175951170275],
+      [16.0757176185992, 108.153703320611],
+      [16.077086462870547, 108.15213504320542],
+      [16.0759008729407, 108.15245570733465],
+    ];
     const intervals = markerIds.map((markerId, index) => {
       const pm25Threshold = pm25Thresholds[index];
       const pm10Threshold = pm10Thresholds[index];
       const COThreshold = COThresholds[index];
       const poisonGasThreshold = poisonGasThresholds[index];
+      const markerPagePathThreshold = markerPagePathThresholds[index];
+
       const interval = setInterval(() => {
         checkWarning(
           markerId,
           pm25Threshold,
           pm10Threshold,
           COThreshold,
-          poisonGasThreshold
+          poisonGasThreshold,
+          markerPagePathThreshold
         );
-      }, 20000);
+      }, 30000);
 
       return interval;
     });
@@ -162,89 +145,101 @@ function Map() {
     return () => {
       intervals.forEach((interval) => clearInterval(interval));
     };
-  }, []);
-
+  }, [colorWarning]);
+  const [colorWarning, setColorWarning] = useState([
+    false,
+    false,
+    false,
+    false,
+  ]);
   const checkWarning = async (
     markerId,
     pm25Threshold,
     pm10Threshold,
     COThreshold,
-    poisonGasThreshold
+    poisonGasThreshold,
+    markerPagePathThreshold
   ) => {
     try {
       // Gọi API Axios về backend với ID của marker
       const response = await axios.get(
-        `http://localhost:8000/api/markers/${markerId}`
+        `${process.env.HOST}/api/markers/${markerId}`
       );
       const data = response.data;
-      const pm25Values = data.pm25.map((item) => item.value);
-      const pm10Values = data.pm10.map((item) => item.value);
-      const COValues = data.CO.map((item) => item.value);
-      const poisonGasValues = data.poisonGas.map((item) => item.value);
+      let updatedColorWarning = [...colorWarning];
+      if (data.pm25 >= pm25Threshold) {
+        updatedColorWarning[markerId - 1] = true;
+        const currentDate = new Date().toLocaleString();
+        const message = `Nồng độ bụi mịn PM 2.5 ở vị trí HKB-${markerId} ở mức gây hại sức khỏe! ${currentDate}`;
+        const toastOptions = { toastId: `pm25-${markerId}` };
+        toast.error(message, toastOptions);
+        // Lưu trữ toast message vào localStorage
+        const toastMessage = {
+          id: `pm25-${markerId}`,
+          message: message,
+          timestamp: Date.now(),
+          path: markerPagePathThreshold,
+        };
+        setToastToLocalStorage(toastMessage);
+      }
 
-      const lastPM25Value = pm25Values.pop();
-      const lastPM10Value = pm10Values.pop();
-      const lastCOValue = COValues.pop();
-      const lastPoisonGasValue = poisonGasValues.pop();
+      if (data.pm10 >= pm10Threshold) {
+        updatedColorWarning[markerId - 1] = true;
+        const currentDate = new Date().toLocaleString();
+        const message = `Nồng độ bụi thô PM 10 ở vị trí HKB-${markerId} ở mức gây hại sức khỏe! ${currentDate}`;
+        const toastOptions = { toastId: `pm10-${markerId}` };
+        toast.error(message, toastOptions);
+        // Lưu trữ toast message vào localStorage
+        const toastMessage = {
+          id: `pm10-${markerId}`,
+          message: message,
+          timestamp: Date.now(),
+          path: markerPagePathThreshold,
+        };
+        setToastToLocalStorage(toastMessage);
+      }
 
-      if (lastPM25Value >= pm25Threshold) {
-        toast.error(
-          `Nồng độ bụi mịn PM 2.5 ở vị trí DUT-${markerId} ở mức gây hại sức khỏe!`
-        ),
-          {
-            onClick: () => handleToastClick(markerId),
-          };
+      if (data.CO >= COThreshold) {
+        updatedColorWarning[markerId - 1] = true;
+        const currentDate = new Date().toLocaleString();
+        const message = `Nồng độ khí CO ở vị trí HKB-${markerId} ở mức gây hại sức khỏe! ${currentDate}`;
+        const toastOptions = { toastId: `CO-${markerId}` };
+        toast.error(message, toastOptions);
+        // Lưu trữ toast message vào localStorage
+        const toastMessage = {
+          id: `CO-${markerId}`,
+          message: message,
+          timestamp: Date.now(),
+          path: markerPagePathThreshold,
+        };
+        setToastToLocalStorage(toastMessage);
       }
-      if (lastPM10Value >= pm10Threshold) {
-        toast.error(
-          `Nồng độ bụi thô PM 10 ở vị trí DUT-${markerId} ở mức gây hại sức khỏe!`
-        ),
-          {
-            onClick: () => handleToastClick(markerId),
-          };
+
+      if (data.poisonGas >= poisonGasThreshold) {
+        updatedColorWarning[markerId - 1] = true;
+        const currentDate = new Date().toLocaleString();
+        const message = `Nồng độ khí độc ở vị trí HKB-${markerId} ở mức gây hại sức khỏe! ${currentDate}`;
+        const toastOptions = { toastId: `poisonGas-${markerId}` };
+        toast.error(message, toastOptions);
+        // Lưu trữ toast message vào localStorage
+        const toastMessage = {
+          id: `poisonGas-${markerId}`,
+          message: message,
+          timestamp: Date.now(),
+          path: markerPagePathThreshold,
+        };
+        setToastToLocalStorage(toastMessage);
       }
-      if (lastCOValue >= COThreshold) {
-        toast.error(
-          `Nồng độ khí CO ở vị trí DUT-${markerId} ở mức gây hại sức khỏe!`
-        ),
-          {
-            onClick: () => handleToastClick(markerId),
-          };
-      }
-      if (lastPoisonGasValue >= poisonGasThreshold) {
-        toast.error(
-          `Nồng độ khí độc ở vị trí DUT-${markerId} ở mức gây hại sức khỏe!`,
-          {
-            onClick: () => handleToastClick(markerId),
-          }
-        );
-      }
+      setColorWarning(updatedColorWarning);
     } catch (error) {
       console.error(error);
     }
   };
-  const handleToastClick = (markerId) => {
-    flyToMarker(markerId);
-  };
-  const mapRef = useRef(null);
 
-  const flyToMarker = (markerId) => {
-    const marker = markers.find((marker) => marker.id === markerId);
-    if (marker) {
-      const map = mapRef.current;
-      if (map) {
-        map.flyTo(marker.geoCode, 15, {
-          duration: 1.5,
-          easeLinearity: 0.5,
-          zoomSnap: 0.5,
-        });
-      }
-    }
-  };
   useEffect(() => {
     const getData = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/");
+        const response = await axios.get(`${process.env.HOST}/`);
       } catch (error) {
         console.error(error);
       }
@@ -256,6 +251,7 @@ function Map() {
   }, []);
   //Locate
   const [location, setLocation] = useState(null);
+  const handleZoom = () => {};
   return (
     <div className={style["map"]}>
       <MapContainer
@@ -286,38 +282,73 @@ function Map() {
             </Popup>
           </Marker>
         ))}
-        <Circle center={[16.0759008729407, 108.15245570733465]} radius={150} />/
-        <Circle
-          center={[16.0759008729407, 108.15245570733465]}
-          radius={15}
-          fillColor={circleColor}
-          fillOpacity={0.3}
-        />
-        <Circle
-          center={[16.077086462870547, 108.15213504320542]}
-          radius={15}
-          fillColor={circleColor}
-          fillOpacity={0.3}
-        />
-        <Circle
-          center={[16.0757176185992, 108.153703320611]}
-          radius={15}
-          fillColor={circleColor}
-          fillOpacity={0.3}
-        />
-        <Circle
-          center={[16.07489869581357, 108.15175951170275]}
-          radius={15}
-          fillColor={circleColor}
-          fillOpacity={0.3}
-        />
+        {/* <Circle center={[16.0759008729407, 108.15245570733465]} radius={150} />/
+        {colorWarning[0] ? (
+          <Circle
+            center={[16.07489869581357, 108.15175951170275]}
+            radius={15}
+            fillColor="red"
+            fillOpacity={0.3}
+          />
+        ) : (
+          <Circle
+            center={[16.07489869581357, 108.15175951170275]}
+            radius={15}
+            fillColor="green"
+            fillOpacity={0.3}
+          />
+        )}
+        {colorWarning[1] ? (
+          <Circle
+            center={[16.0757176185992, 108.153703320611]}
+            radius={15}
+            fillColor="red"
+            fillOpacity={0.3}
+          />
+        ) : (
+          <Circle
+            center={[16.0757176185992, 108.153703320611]}
+            radius={15}
+            fillColor="green"
+            fillOpacity={0.3}
+          />
+        )}
+        {colorWarning[2] ? (
+          <Circle
+            center={[16.077086462870547, 108.15213504320542]}
+            radius={15}
+            fillColor="red"
+            fillOpacity={0.3}
+          />
+        ) : (
+          <Circle
+            center={[16.077086462870547, 108.15213504320542]}
+            radius={15}
+            fillColor="green"
+            fillOpacity={0.3}
+          />
+        )}
+        {colorWarning[3] ? (
+          <Circle
+            center={[16.0759008729407, 108.15245570733465]}
+            radius={15}
+            fillColor="red"
+            fillOpacity={0.3}
+          />
+        ) : (
+          <Circle
+            center={[16.0759008729407, 108.15245570733465]}
+            radius={15}
+            fillColor="green"
+            fillOpacity={0.3}
+          />
+        )}
         <Circle center={[16.061063, 108.223943]} radius={15} />
         <Circle center={[16.071766, 108.223955]} radius={15} />
-        <Circle center={[16.049439, 108.222323]} radius={15} />
+        <Circle center={[16.049439, 108.222323]} radius={15} /> */}
         {markerPosition && (
           <Marker icon={customIcon2} position={markerPosition}>
             <Popup offset={[-8, -20]}>
-              <div>Hello</div>
               <Link to={DASHBOARD_PAGE_PATH}>Xem thêm</Link>
             </Popup>
           </Marker>
@@ -344,7 +375,7 @@ function Map() {
               PM 2.5
             </div>
             <div className={joinCls("text-center", style["tem-text"])}>
-              {dataMakers.interpolationPM25 || permanentData.lastPM25}
+              {dataMakers.interpolationPM25 || permanentData.pm25}
             </div>
             <div className={style["unit-common-position"]}>μm/m3</div>
           </div>
@@ -359,7 +390,7 @@ function Map() {
               PM 10
             </div>
             <div className={joinCls("text-center", style["tem-text"])}>
-              {dataMakers.interpolationPM10 || permanentData.lastPM10}
+              {dataMakers.interpolationPM10 || permanentData.pm10}
             </div>
             <div className={style["unit-common-position"]}>μm/m3</div>
           </div>
@@ -374,7 +405,7 @@ function Map() {
               CO
             </div>
             <div className="text-center">
-              {dataMakers.interpolationCO || permanentData.lastCO}
+              {dataMakers.interpolationCO || permanentData.CO}
             </div>
             <div className={style["unit-common-position"]}>ppm</div>
           </div>
@@ -389,7 +420,7 @@ function Map() {
               Poison Gas
             </div>
             <div className="text-center">
-              {dataMakers.interpolationPoisonGas || permanentData.lastPoisonGas}
+              {dataMakers.interpolationPoisonGas || permanentData.poisonGas}
             </div>
             <div className={style["unit-common-position"]}>ppm</div>
           </div>
@@ -410,7 +441,7 @@ function Map() {
                 Temperature
                 <div className={joinCls("text-center", style["tem-text"])}>
                   {dataMakers.interpolationTemperature ||
-                    permanentData.lastTemperature}
+                    permanentData.temperature}
                 </div>
                 <div className={style["unit-position"]}>°C</div>
               </div>
@@ -425,8 +456,7 @@ function Map() {
                 ></i>
                 Humidity
                 <div className={joinCls("text-center", style["tem-text"])}>
-                  {dataMakers.interpolationHumidity ||
-                    permanentData.lastHumidity}
+                  {dataMakers.interpolationHumidity || permanentData.humidity}
                 </div>
                 <div className={style["unit-position"]}>%</div>
               </div>
