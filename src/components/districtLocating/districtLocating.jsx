@@ -1,4 +1,6 @@
 import React from "react";
+import style from "./style.module.css";
+import { joinCls } from "../../utilities/text.utilities";
 
 class DistrictSelector extends React.Component {
   constructor(props) {
@@ -10,34 +12,24 @@ class DistrictSelector extends React.Component {
     };
   }
 
-  handleDistrictChange = (event) => {
-    const selectedDistrict = event.target.value;
-    this.setState({ selectedDistrict });
-
-    // Lấy danh sách phường/xã tương ứng với quận/huyện được chọn
-    const { districts } = this.props;
+  render() {
+    const { districts, selectedDistrict, selectedWard } = this.props;
     const district = districts.find((d) => d.id === selectedDistrict);
     const wards = district ? district.wards : [];
-    this.setState({ wards });
-  };
-
-  handleWardChange = (event) => {
-    const selectedWard = event.target.value;
-    this.setState({ selectedWard });
-  };
-
-  render() {
-    const { selectedDistrict, selectedWard, wards } = this.state;
-    const { districts } = this.props;
 
     return (
       <div className="d-flex">
-        <div className="mt-3">
-          <label htmlFor="district">Quận/Huyện:</label>
+        <div className="">
+          <label
+            className={joinCls("me-1", style["label-1"])}
+            htmlFor="district"
+          >
+            Quận/Huyện:
+          </label>
           <select
             id="district"
             value={selectedDistrict}
-            onChange={this.handleDistrictChange}
+            onChange={this.props.onChangeDistrict}
           >
             <option value="">Chọn quận/huyện</option>
             {districts.map((district) => (
@@ -48,12 +40,14 @@ class DistrictSelector extends React.Component {
           </select>
         </div>
 
-        <div className="mt-3 ms-3">
-          <label htmlFor="ward">Phường/Xã:</label>
+        <div className=" ms-3">
+          <label className={joinCls("me-1", style["label-1"])} htmlFor="ward">
+            Phường/Xã:
+          </label>
           <select
             id="ward"
             value={selectedWard}
-            onChange={this.handleWardChange}
+            onChange={this.props.onChangeWard}
           >
             <option value="">Chọn phường/xã</option>
             {wards.map((ward) => (

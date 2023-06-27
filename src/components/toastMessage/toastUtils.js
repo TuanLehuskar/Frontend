@@ -10,7 +10,7 @@ const setToastToLocalStorage = (newToastMessage) => {
   updatedToastMessages.unshift(newToastMessage);
 
   // Giới hạn số lượng phần tử thành 10
-  updatedToastMessages = updatedToastMessages.slice(0, 10);
+  // updatedToastMessages = updatedToastMessages.slice(0, 10);
 
   // Lưu trữ danh sách toast messages cập nhật vào localStorage
   localStorage.setItem("toastMessages", JSON.stringify(updatedToastMessages));

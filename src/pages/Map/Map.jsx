@@ -17,47 +17,36 @@ import L from "leaflet";
 import markerIcon from "./images/pin.png";
 import markerIcon2 from "./images/placeholder.png";
 import { DASHBOARD_PAGE_PATH } from "../Dashboard/constant";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { DUT_1_PAGE_PATH } from "../Dashboard/SubPage/DUTPage1/constant";
-import { DUT_2_PAGE_PATH } from "../Dashboard/SubPage/DUTPage2/constant";
-import { DUT_3_PAGE_PATH } from "../Dashboard/SubPage/DUTPage3/constant";
-import { DUT_4_PAGE_PATH } from "../Dashboard/SubPage/DUTPage4/constant";
 import GetLocationButton from "../../components/locationMarker/LocationMarker.jsx";
-import ZoomToLocation from "../../components/zoomToLocation/ZoomToLocation.jsx";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { setToastToLocalStorage } from "../../components/toastMessage/toastUtils";
-
+import { useLocation } from "react-router-dom";
 function Map() {
   const markers = [
     {
       id: 1,
       geoCode: [16.09004, 108.146262],
       popup: "HKB-1",
-      path: DUT_1_PAGE_PATH,
     },
     {
       id: 2,
       geoCode: [16.073119, 108.151242],
       popup: "HKB-2",
-      path: DUT_2_PAGE_PATH,
     },
     {
       id: 3,
       geoCode: [16.076239, 108.126125],
       popup: "HKB-3",
-      path: DUT_3_PAGE_PATH,
     },
     {
       id: 4,
       geoCode: [16.080747, 108.140488],
       popup: "HKB-Center",
-      path: DUT_4_PAGE_PATH,
     },
-    // { id: 5, geoCode: [16.061063, 108.223943], popup: "Rong Bridge" },
-    // { id: 6, geoCode: [16.071766, 108.223955], popup: "Han Bridge" },
-    // { id: 7, geoCode: [16.049439, 108.222323], popup: "Tran Thi Ly Bridge" },
   ];
   const customIcon = L.icon({
     iconUrl: `${markerIcon}`,
@@ -111,7 +100,7 @@ function Map() {
 
   useEffect(() => {
     const markerIds = [1, 2, 3, 4]; // ID của các marker cần kiểm tra
-    const pm25Thresholds = [36, 36, 36, 36]; // Ngưỡng PM 2.5 tương ứng cho từng marker
+    const pm25Thresholds = [0, 0, 0, 0]; // Ngưỡng PM 2.5 tương ứng cho từng marker
     const pm10Thresholds = [155, 155, 155, 155]; // Ngưỡng PM 10 tương ứng cho từng marker
     const COThresholds = [40, 40, 40, 40];
     const poisonGasThresholds = [100, 100, 100, 100];
@@ -137,7 +126,7 @@ function Map() {
           poisonGasThreshold,
           markerPagePathThreshold
         );
-      }, 30000);
+      }, 60000);
 
       return interval;
     });
@@ -145,13 +134,7 @@ function Map() {
     return () => {
       intervals.forEach((interval) => clearInterval(interval));
     };
-  }, [colorWarning]);
-  const [colorWarning, setColorWarning] = useState([
-    false,
-    false,
-    false,
-    false,
-  ]);
+  }, []);
   const checkWarning = async (
     markerId,
     pm25Threshold,
@@ -166,17 +149,15 @@ function Map() {
         `${process.env.HOST}/api/markers/${markerId}`
       );
       const data = response.data;
-      let updatedColorWarning = [...colorWarning];
       if (data.pm25 >= pm25Threshold) {
-        updatedColorWarning[markerId - 1] = true;
         const currentDate = new Date().toLocaleString();
-        const message = `Nồng độ bụi mịn PM 2.5 ở vị trí HKB-${markerId} ở mức gây hại sức khỏe! ${currentDate}`;
+        const message = `Nồng độ bụi mịn PM 2.5 ở vị trí HKB-${markerId} ở mức gây hại sức khỏe!`;
         const toastOptions = { toastId: `pm25-${markerId}` };
-        toast.error(message, toastOptions);
         // Lưu trữ toast message vào localStorage
         const toastMessage = {
           id: `pm25-${markerId}`,
           message: message,
+          time: currentDate,
           timestamp: Date.now(),
           path: markerPagePathThreshold,
         };
@@ -184,15 +165,14 @@ function Map() {
       }
 
       if (data.pm10 >= pm10Threshold) {
-        updatedColorWarning[markerId - 1] = true;
         const currentDate = new Date().toLocaleString();
-        const message = `Nồng độ bụi thô PM 10 ở vị trí HKB-${markerId} ở mức gây hại sức khỏe! ${currentDate}`;
+        const message = `Nồng độ bụi thô PM 10 ở vị trí HKB-${markerId} ở mức gây hại sức khỏe!`;
         const toastOptions = { toastId: `pm10-${markerId}` };
-        toast.error(message, toastOptions);
         // Lưu trữ toast message vào localStorage
         const toastMessage = {
           id: `pm10-${markerId}`,
           message: message,
+          time: currentDate,
           timestamp: Date.now(),
           path: markerPagePathThreshold,
         };
@@ -200,15 +180,14 @@ function Map() {
       }
 
       if (data.CO >= COThreshold) {
-        updatedColorWarning[markerId - 1] = true;
         const currentDate = new Date().toLocaleString();
-        const message = `Nồng độ khí CO ở vị trí HKB-${markerId} ở mức gây hại sức khỏe! ${currentDate}`;
+        const message = `Nồng độ khí CO ở vị trí HKB-${markerId} ở mức gây hại sức khỏe!`;
         const toastOptions = { toastId: `CO-${markerId}` };
-        toast.error(message, toastOptions);
         // Lưu trữ toast message vào localStorage
         const toastMessage = {
           id: `CO-${markerId}`,
           message: message,
+          time: currentDate,
           timestamp: Date.now(),
           path: markerPagePathThreshold,
         };
@@ -216,21 +195,19 @@ function Map() {
       }
 
       if (data.poisonGas >= poisonGasThreshold) {
-        updatedColorWarning[markerId - 1] = true;
         const currentDate = new Date().toLocaleString();
-        const message = `Nồng độ khí độc ở vị trí HKB-${markerId} ở mức gây hại sức khỏe! ${currentDate}`;
+        const message = `Nồng độ khí độc ở vị trí HKB-${markerId} ở mức gây hại sức khỏe!`;
         const toastOptions = { toastId: `poisonGas-${markerId}` };
-        toast.error(message, toastOptions);
         // Lưu trữ toast message vào localStorage
         const toastMessage = {
           id: `poisonGas-${markerId}`,
           message: message,
+          time: currentDate,
           timestamp: Date.now(),
           path: markerPagePathThreshold,
         };
         setToastToLocalStorage(toastMessage);
       }
-      setColorWarning(updatedColorWarning);
     } catch (error) {
       console.error(error);
     }
@@ -251,7 +228,20 @@ function Map() {
   }, []);
   //Locate
   const [location, setLocation] = useState(null);
-  const handleZoom = () => {};
+  ////
+
+  const location2 = useLocation();
+  const mapRef = useRef(null);
+  const { coordinates, zoom } = location2.state || {};
+
+  useEffect(() => {
+    if (coordinates && zoom) {
+      const map = mapRef.current;
+      if (map) {
+        map.setView(coordinates, zoom);
+      }
+    }
+  }, [coordinates, zoom]);
   return (
     <div className={style["map"]}>
       <MapContainer
@@ -259,6 +249,7 @@ function Map() {
         center={[16.0544, 108.2022]}
         zoom={13}
         scrollWheelZoom={true}
+        ref={mapRef}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -276,80 +267,14 @@ function Map() {
             <Popup offset={[-8, -10]}>
               <div>
                 <p>{marker.popup}</p>
-                Hello
               </div>
-              <Link to={marker.path}>Xem thêm</Link>
             </Popup>
           </Marker>
         ))}
-        {/* <Circle center={[16.0759008729407, 108.15245570733465]} radius={150} />/
-        {colorWarning[0] ? (
-          <Circle
-            center={[16.07489869581357, 108.15175951170275]}
-            radius={15}
-            fillColor="red"
-            fillOpacity={0.3}
-          />
-        ) : (
-          <Circle
-            center={[16.07489869581357, 108.15175951170275]}
-            radius={15}
-            fillColor="green"
-            fillOpacity={0.3}
-          />
-        )}
-        {colorWarning[1] ? (
-          <Circle
-            center={[16.0757176185992, 108.153703320611]}
-            radius={15}
-            fillColor="red"
-            fillOpacity={0.3}
-          />
-        ) : (
-          <Circle
-            center={[16.0757176185992, 108.153703320611]}
-            radius={15}
-            fillColor="green"
-            fillOpacity={0.3}
-          />
-        )}
-        {colorWarning[2] ? (
-          <Circle
-            center={[16.077086462870547, 108.15213504320542]}
-            radius={15}
-            fillColor="red"
-            fillOpacity={0.3}
-          />
-        ) : (
-          <Circle
-            center={[16.077086462870547, 108.15213504320542]}
-            radius={15}
-            fillColor="green"
-            fillOpacity={0.3}
-          />
-        )}
-        {colorWarning[3] ? (
-          <Circle
-            center={[16.0759008729407, 108.15245570733465]}
-            radius={15}
-            fillColor="red"
-            fillOpacity={0.3}
-          />
-        ) : (
-          <Circle
-            center={[16.0759008729407, 108.15245570733465]}
-            radius={15}
-            fillColor="green"
-            fillOpacity={0.3}
-          />
-        )}
-        <Circle center={[16.061063, 108.223943]} radius={15} />
-        <Circle center={[16.071766, 108.223955]} radius={15} />
-        <Circle center={[16.049439, 108.222323]} radius={15} /> */}
         {markerPosition && (
           <Marker icon={customIcon2} position={markerPosition}>
             <Popup offset={[-8, -20]}>
-              <Link to={DASHBOARD_PAGE_PATH}>Xem thêm</Link>
+              <div>Selected Position</div>
             </Popup>
           </Marker>
         )}

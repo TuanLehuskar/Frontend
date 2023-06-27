@@ -6,82 +6,112 @@ import { MAP_PAGE_PATH } from "../Map/constant";
 import mockData from "../../components/mockData";
 import DistrictSelector from "../../components/districtLocating/districtLocating.jsx";
 function Warning() {
-  const [toastMessages, setToastMessages] = useState([]);
-  useEffect(() => {
-    // Lấy danh sách toast messages từ localStorage
-    const storedToastMessages = localStorage.getItem("toastMessages");
-    if (storedToastMessages) {
-      const parsedToastMessages = JSON.parse(storedToastMessages);
-      setToastMessages(parsedToastMessages);
-    }
-  }, []);
-  const navigate = useNavigate();
-  const moveToLocation = (path) => {
-    // Chuyển hướng tới trang Map với thông tin vị trí truyền qua URL
-    navigate(MAP_PAGE_PATH);
-  };
-  const [localStorageCleared, setLocalStorageCleared] = useState(false);
+  const [data, setData] = useState([]);
 
+  useEffect(() => {
+    const fetchDataFromLocalStorage = () => {
+      const localStorageData = JSON.parse(
+        localStorage.getItem("toastMessages")
+      );
+      if (localStorageData) {
+        setData(localStorageData);
+      }
+    };
+
+    fetchDataFromLocalStorage();
+  }, []);
   const handleClearLocalStorage = () => {
-    localStorage.clear();
-    setLocalStorageCleared(true);
-    setToastMessages([]);
+    localStorage.removeItem("toastMessages");
+    setData([]);
+  };
+  const handleReset = () => {
+    const localStorageData = JSON.parse(localStorage.getItem("toastMessages"));
+    if (localStorageData) {
+      setData(localStorageData);
+    }
+  };
+  const [selectedDistrict, setSelectedDistrict] = useState("");
+  const [selectedWard, setSelectedWard] = useState("");
+
+  const handleDistrictChange = (event) => {
+    const selectedDistrict = event.target.value;
+    setSelectedDistrict(selectedDistrict);
+    setSelectedWard("");
   };
 
-  useEffect(() => {
-    const clearLocalStorageAtMidnight = () => {
-      const now = new Date();
-      const midnight = new Date(
-        now.getFullYear(),
-        now.getMonth(),
-        now.getDate() + 1,
-        0,
-        0,
-        0
-      ); // Lấy thời điểm 00:00 hôm sau
+  const handleWardChange = (event) => {
+    const selectedWard = event.target.value;
+    setSelectedWard(selectedWard);
+  };
+  const navigate = useNavigate();
 
-      const timeUntilMidnight = midnight - now;
-
-      setTimeout(() => {
-        localStorage.clear();
-        clearLocalStorageAtMidnight(); // Thiết lập lại xóa localStorage vào 00:00 hôm sau
-      }, timeUntilMidnight);
-    };
-
-    clearLocalStorageAtMidnight(); // Bắt đầu xóa localStorage vào 00:00
-
-    // Xóa localStorage khi component unmount (khi rời khỏi trang)
-    return () => {
-      localStorage.clear();
-    };
-  }, []);
+  const handleMoveBtnClicked = (coordinates) => {
+    navigate(MAP_PAGE_PATH, { state: { coordinates: coordinates, zoom: 17 } });
+  };
   return (
-    <div className={joinCls("container", style["warning-wrap"])}>
-      <DistrictSelector districts={mockData} />
-      <button className="mt-3" onClick={handleClearLocalStorage}>
-        {" "}
-        Xóa lịch sử{" "}
-      </button>
-      {toastMessages.map((toastMessage) => (
-        <div
-          className={joinCls(
-            "d-flex mx-3 justify-content-between align-items-center my-3 p-3",
-            style["warning-component"]
-          )}
-          key={toastMessage.id}
-        >
-          <p className="mb-0">{toastMessage.message}</p>
-          {/* <button onclick={() => moveToLocation(toastMessage.path)}>
-            Xem vị trí
+    <div className="container">
+      <div
+        className={joinCls(
+          "d-flex align-items-center justify-content-around mt-2",
+          style["warning-wrap"]
+        )}
+      >
+        <div className="d-flex align-items-center">
+          <DistrictSelector
+            districts={mockData}
+            selectedDistrict={selectedDistrict}
+            selectedWard={selectedWard}
+            onChangeDistrict={handleDistrictChange}
+            onChangeWard={handleWardChange}
+          />
+          <button className={style["clear-btn"]} onClick={handleReset}>
+            <i className="fa-solid fa-arrow-rotate-right"></i>
           </button>
-          <Link
-            onClick={() => handleOnClick(toastMessage.path)}
-            to={MAP_PAGE_PATH}
-          >
-            123{" "}
-          </Link> */}
         </div>
-      ))}
+        <button
+          onClick={handleClearLocalStorage}
+          className={style["clear-btn"]}
+        >
+          Xóa lịch sử
+        </button>
+      </div>
+      <div className="">
+        <div>
+          {!selectedDistrict || !selectedWard ? (
+            <div
+              className={joinCls(
+                "d-flex mx-3 justify-content-between align-items-center my-3 p-3",
+                style["warning-component"]
+              )}
+            >
+              <p className="mb-0">Vui lòng chọn khu vực</p>
+            </div>
+          ) : selectedDistrict === "quan_lien_chieu" &&
+            selectedWard === "phuong_hoa_khanh_bac" ? (
+            data &&
+            data.map((item, index) => (
+              <div className={joinCls("row", style["warning-box"])} key={index}>
+                <div className="col-6">{item.message}</div>
+                <div className="col-3">{item.time}</div>
+                <div className="col-2">
+                  <button onClick={() => handleMoveBtnClicked(item.path)}>
+                    Xem vị trí
+                  </button>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div
+              className={joinCls(
+                "d-flex mx-3 justify-content-between align-items-center my-3 p-3",
+                style["warning-component"]
+              )}
+            >
+              <p className="mb-0">Khu vực chưa khả thi</p>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

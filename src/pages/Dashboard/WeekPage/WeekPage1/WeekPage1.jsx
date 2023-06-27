@@ -4,89 +4,76 @@ import { joinCls } from "../../../../utilities/text.utilities";
 import BarChart from "../../../../components/charts/barChart";
 import LineChart from "../../../../components/charts/lineChart";
 import axios from "axios";
+import TotalChart from "../../../../components/charts/totalChart";
 
-function DUT1Page(props) {
+function WeekPage1(props) {
   const data = props.data;
+  const dataCalculate = (data) => {
+    const result = {};
 
+    // Lặp qua từng trường dữ liệu (temperature, humidity, ...)
+    for (const field in data) {
+      result[field] = [];
+
+      // Lặp qua 7 ngày trước đó
+      for (let i = 0; i < 7; i++) {
+        // Lấy 24 đối tượng đầu tiên của ngày hiện tại
+        const dayData = data[field].slice(0, 24);
+
+        // Tính giá trị min, max và average
+        const values = dayData.map((item) => item.value);
+        const min24 = Math.min(...values);
+        const max24 = Math.max(...values);
+        const avg24 = Number(
+          (
+            values.reduce((sum, value) => sum + value, 0) / values.length
+          ).toFixed(1)
+        );
+        // Tạo đối tượng mới
+        const newObj = {
+          min: min24,
+          max: max24,
+          average: avg24,
+        };
+
+        // Thêm đối tượng vào mảng kết quả
+        result[field].push(newObj);
+      }
+    }
+    return result;
+  };
+  const finalData = dataCalculate(data);
   return (
     <div className="overflow-hidden">
       <div className="row justify-content-around pt-5">
         <div className={joinCls("col-5", style["dashboard-component"])}>
-          {data.temperature && (
-            <LineChart
-              data={data.temperature}
-              label="℃"
-              borderColor={"#ea5656"}
-              backgroundColor="#ea5656"
-              volume={props.day}
-            />
-          )}
+          {finalData.temperature && <TotalChart data={finalData.temperature} />}
           <p className="text-center mb-0 mt-2 fw-bold">Nhiệt độ</p>
         </div>
         <div className={joinCls("col-5", style["dashboard-component"])}>
-          {data.humidity && (
-            <LineChart
-              data={data.humidity}
-              borderColor={"#8cdadb"}
-              backgroundColor="#8cdadb"
-              label="%"
-              volume={props.day}
-            />
-          )}
+          {finalData.humidity && <TotalChart data={finalData.humidity} />}
           <p className="text-center mb-0 mt-2 fw-bold">Độ ẩm</p>
         </div>
       </div>
       <div className="row justify-content-around mt-5 pb-5">
         <div className={joinCls("col-5", style["dashboard-component"])}>
-          {data.pm25 && (
-            <BarChart
-              data={data.pm25}
-              borderColor={"#4a746e"}
-              label="µm/m3"
-              backgroundColor="#4a746e"
-              volume={props.day}
-            />
-          )}
+          {finalData.pm25 && <TotalChart data={finalData.pm25} />}
           <p className="text-center mb-0 mt-2 fw-bold">
             Nồng độ bụi mịn PM 2.5
           </p>
         </div>
         <div className={joinCls("col-5", style["dashboard-component"])}>
-          {data.pm10 && (
-            <BarChart
-              data={data.pm10}
-              borderColor={"#9ad1aa"}
-              label="µm/m3"
-              backgroundColor="#9ad1aa"
-              volume={props.day}
-            />
-          )}
+          {finalData.pm10 && <TotalChart data={finalData.pm10} />}
           <p className="text-center mb-0 mt-2 fw-bold">Nồng độ bụi mịn PM 10</p>
         </div>
       </div>
       <div className="row justify-content-around mt-5 pb-5">
         <div className={joinCls("col-5", style["dashboard-component"])}>
-          {data.CO && (
-            <BarChart
-              data={data.CO}
-              borderColor={"#9fa180"}
-              backgroundColor="#9fa180"
-              label="ppm"
-              volume={props.day}
-            />
-          )}
+          {finalData.CO && <TotalChart data={finalData.CO} />}
           <p className="text-center mb-0 mt-2 fw-bold">Nồng độ khí CO</p>
         </div>
         <div className={joinCls("col-5", style["dashboard-component"])}>
-          {data.poisonGas && (
-            <BarChart
-              data={data.poisonGas}
-              borderColor={"#8b76a5"}
-              backgroundColor="#8b76a5"
-              label="ppm"
-              volume={props.day}
-            />
-          )}
+          {finalData.poisonGas && <TotalChart data={finalData.poisonGas} />}
           <p className="text-center mb-0 mt-2 fw-bold">
             Nồng độ các khí độc khác
           </p>
@@ -96,4 +83,4 @@ function DUT1Page(props) {
   );
 }
 
-export default DUT1Page;
+export default WeekPage1;

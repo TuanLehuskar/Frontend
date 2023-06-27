@@ -2,7 +2,7 @@
   /* background: linear-gradient(180deg, #d3d5fd 20%, #62929a 63%); */
   background-color: #e9fadd;
   height: 100% !important;
-  overflow: hidden;
+  min-height: 100vh;
 }
 
 .active {

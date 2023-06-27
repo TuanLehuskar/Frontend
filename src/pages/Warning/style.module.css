@@ -1,4 +1,7 @@
 .warning-wrap {
+  background: #9ad1aa;
+  padding: 1rem;
+  border-radius: 10px;
 }
 
 .warning-component {
@@ -6,6 +9,22 @@
   border-radius: 10px;
 }
 
+.warning-component p {
+  font-weight: bold;
+}
+
 .warning-content {
   margin-bottom: 0 !important;
+}
+
+.clear-btn:hover {
+  background: #469b4c;
+  color: white;
+}
+
+.warning-box {
+  border: 2px solid #9ad1aa;
+  padding: 1rem;
+  margin: 1rem 0;
+  background: #ffd7be;
 }
