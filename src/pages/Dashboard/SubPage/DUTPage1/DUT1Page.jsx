@@ -39,7 +39,7 @@ function DUT1Page(props) {
       <div className="row justify-content-around mt-5 pb-5">
         <div className={joinCls("col-5", style["dashboard-component"])}>
           {data.pm25 && (
-            <BarChart
+            <LineChart
               data={data.pm25}
               borderColor={"#4a746e"}
               label="µm/m3"
@@ -53,7 +53,7 @@ function DUT1Page(props) {
         </div>
         <div className={joinCls("col-5", style["dashboard-component"])}>
           {data.pm10 && (
-            <BarChart
+            <LineChart
               data={data.pm10}
               borderColor={"#9ad1aa"}
               label="µm/m3"
@@ -67,7 +67,7 @@ function DUT1Page(props) {
       <div className="row justify-content-around mt-5 pb-5">
         <div className={joinCls("col-5", style["dashboard-component"])}>
           {data.CO && (
-            <BarChart
+            <LineChart
               data={data.CO}
               borderColor={"#9fa180"}
               backgroundColor="#9fa180"
@@ -79,7 +79,7 @@ function DUT1Page(props) {
         </div>
         <div className={joinCls("col-5", style["dashboard-component"])}>
           {data.poisonGas && (
-            <BarChart
+            <LineChart
               data={data.poisonGas}
               borderColor={"#8b76a5"}
               backgroundColor="#8b76a5"

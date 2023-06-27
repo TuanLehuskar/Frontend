@@ -6,6 +6,15 @@ function TotalChart({ data }) {
     labels: sevenDaysAgo,
     datasets: [
       {
+        label: "Min",
+        backgroundColor: "rgba(92, 184, 92, 0.4)",
+        borderColor: "rgba(92, 184, 92, 1)",
+        borderWidth: 1,
+        hoverBackgroundColor: "rgba(92, 184, 92, 0.6)",
+        hoverBorderColor: "rgba(92, 184, 92, 1)",
+        data: data.map((item) => item.min),
+      },
+      {
         label: "Average",
         backgroundColor: "rgba(75,192,192,0.4)",
         borderColor: "rgba(75,192,192,1)",
@@ -15,21 +24,12 @@ function TotalChart({ data }) {
         data: data.map((item) => item.average),
       },
       {
-        label: "Min",
+        label: "Max",
         backgroundColor: "rgba(255,99,132,0.4)",
         borderColor: "rgba(255,99,132,1)",
         borderWidth: 1,
         hoverBackgroundColor: "rgba(255,99,132,0.6)",
         hoverBorderColor: "rgba(255,99,132,1)",
-        data: data.map((item) => item.min),
-      },
-      {
-        label: "Max",
-        backgroundColor: "rgba(54,162,235,0.4)",
-        borderColor: "rgba(54,162,235,1)",
-        borderWidth: 1,
-        hoverBackgroundColor: "rgba(54,162,235,0.6)",
-        hoverBorderColor: "rgba(54,162,235,1)",
         data: data.map((item) => item.max),
       },
     ],

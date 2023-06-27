@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
 import style from "./style.module.css";
 import { joinCls } from "../../../../utilities/text.utilities";
-import BarChart from "../../../../components/charts/barChart";
-import LineChart from "../../../../components/charts/lineChart";
-import axios from "axios";
 import TotalChart from "../../../../components/charts/totalChart";
 
 function WeekPage1(props) {
@@ -18,7 +15,7 @@ function WeekPage1(props) {
       // Lặp qua 7 ngày trước đó
       for (let i = 0; i < 7; i++) {
         // Lấy 24 đối tượng đầu tiên của ngày hiện tại
-        const dayData = data[field].slice(0, 24);
+        const dayData = data[field].slice(i * 24, (i + 1) * 24);
 
         // Tính giá trị min, max và average
         const values = dayData.map((item) => item.value);
@@ -43,6 +40,7 @@ function WeekPage1(props) {
     return result;
   };
   const finalData = dataCalculate(data);
+  console.log(finalData);
   return (
     <div className="overflow-hidden">
       <div className="row justify-content-around pt-5">

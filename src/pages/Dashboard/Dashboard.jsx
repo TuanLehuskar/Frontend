@@ -3,8 +3,6 @@ import style from "./style.module.css";
 import { joinCls } from "../../../src/utilities/text.utilities";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import BarChart from "../../../src/components/charts/barChart";
-import LineChart from "../../../src/components/charts/lineChart";
 import DUT1Page from "./SubPage/DUTPage1/DUT1Page.jsx";
 import DistrictSelector from "../../components/districtLocating/districtLocating.jsx";
 import mockData from "../../components/mockData";

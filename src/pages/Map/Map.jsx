@@ -1,13 +1,9 @@
 import React, { useState, useEffect, useRef } from "react"; // nạp thư viện react
-import ReactDOM from "react-dom/client"; // nạp thư viện react-dom
 import {
   MapContainer,
-  LayerControl,
   TileLayer,
-  useMap,
   Marker,
   Popup,
-  Circle,
   useMapEvents,
 } from "react-leaflet";
 import style from "./style.module.css";
@@ -16,13 +12,8 @@ import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import markerIcon from "./images/pin.png";
 import markerIcon2 from "./images/placeholder.png";
-import { DASHBOARD_PAGE_PATH } from "../Dashboard/constant";
-import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { DUT_1_PAGE_PATH } from "../Dashboard/SubPage/DUTPage1/constant";
 import GetLocationButton from "../../components/locationMarker/LocationMarker.jsx";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { setToastToLocalStorage } from "../../components/toastMessage/toastUtils";
 import { useLocation } from "react-router-dom";
 function Map() {
@@ -152,7 +143,6 @@ function Map() {
       if (data.pm25 >= pm25Threshold) {
         const currentDate = new Date().toLocaleString();
         const message = `Nồng độ bụi mịn PM 2.5 ở vị trí HKB-${markerId} ở mức gây hại sức khỏe!`;
-        const toastOptions = { toastId: `pm25-${markerId}` };
         // Lưu trữ toast message vào localStorage
         const toastMessage = {
           id: `pm25-${markerId}`,
@@ -167,7 +157,6 @@ function Map() {
       if (data.pm10 >= pm10Threshold) {
         const currentDate = new Date().toLocaleString();
         const message = `Nồng độ bụi thô PM 10 ở vị trí HKB-${markerId} ở mức gây hại sức khỏe!`;
-        const toastOptions = { toastId: `pm10-${markerId}` };
         // Lưu trữ toast message vào localStorage
         const toastMessage = {
           id: `pm10-${markerId}`,
@@ -182,7 +171,6 @@ function Map() {
       if (data.CO >= COThreshold) {
         const currentDate = new Date().toLocaleString();
         const message = `Nồng độ khí CO ở vị trí HKB-${markerId} ở mức gây hại sức khỏe!`;
-        const toastOptions = { toastId: `CO-${markerId}` };
         // Lưu trữ toast message vào localStorage
         const toastMessage = {
           id: `CO-${markerId}`,
@@ -197,7 +185,6 @@ function Map() {
       if (data.poisonGas >= poisonGasThreshold) {
         const currentDate = new Date().toLocaleString();
         const message = `Nồng độ khí độc ở vị trí HKB-${markerId} ở mức gây hại sức khỏe!`;
-        const toastOptions = { toastId: `poisonGas-${markerId}` };
         // Lưu trữ toast message vào localStorage
         const toastMessage = {
           id: `poisonGas-${markerId}`,
@@ -389,11 +376,6 @@ function Map() {
           </div>
         </div>
       </div>
-      <ToastContainer
-        autoClose={8000}
-        closeOnClick={false}
-        pauseOnFocusLoss={false}
-      />
     </div>
   );
 }
