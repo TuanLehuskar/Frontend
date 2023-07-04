@@ -21,7 +21,7 @@ ChartJS.register(
 );
 
 const LineChart = (props) => {
-  const last7Objects = props.data.slice(props.volume);
+  const last7Objects = props.data;
   const extractedValue = last7Objects.map((item) => item.value);
   const extractedTime = labelsTime;
   const data = {

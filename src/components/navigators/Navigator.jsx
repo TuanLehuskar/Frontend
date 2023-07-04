@@ -8,6 +8,7 @@ import { MAP_PAGE_PATH } from "../../pages/Map/constant";
 import { DASHBOARD_PAGE_PATH } from "../../pages/Dashboard/constant";
 import { WARNING_PAGE_PATH } from "../../pages/Warning/constant";
 import { DUT_1_PAGE_PATH } from "../../pages/Dashboard/SubPage/DUTPage1/constant";
+import { HOME_PAGE_PATH } from "../../pages/Home/constants";
 
 function Navigator() {
   return (
@@ -29,6 +30,11 @@ function Navigator() {
         </label>
         <div className={style["menu"]}>Menu</div>
         <ol>
+          <li>
+            <NavLink className={style["nav-component"]} to={HOME_PAGE_PATH}>
+              <i className="fa-solid fa-user me-2"></i>HOME
+            </NavLink>
+          </li>
           <li>
             <NavLink className={style["nav-component"]} to={MAP_PAGE_PATH}>
               <i className="fa-solid fa-earth-americas me-2"></i>MAP

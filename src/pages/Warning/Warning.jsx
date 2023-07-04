@@ -43,11 +43,7 @@ function Warning() {
     const selectedWard = event.target.value;
     setSelectedWard(selectedWard);
   };
-  const navigate = useNavigate();
 
-  const handleMoveBtnClicked = (coordinates) => {
-    navigate(MAP_PAGE_PATH, { state: { coordinates: coordinates, zoom: 17 } });
-  };
   return (
     <div className="container">
       <div
@@ -94,9 +90,14 @@ function Warning() {
                 <div className="col-6">{item.message}</div>
                 <div className="col-3">{item.time}</div>
                 <div className="col-2">
-                  <button onClick={() => handleMoveBtnClicked(item.path)}>
+                  {/* <button onClick={() => handleMoveBtnClicked(item.path)}>
                     Xem vị trí
-                  </button>
+                  </button> */}
+                  <Link
+                    to={`${MAP_PAGE_PATH}?lat=${item.path[0]}&lng=${item.path[1]}&zoom=17`}
+                  >
+                    Move
+                  </Link>
                 </div>
               </div>
             ))

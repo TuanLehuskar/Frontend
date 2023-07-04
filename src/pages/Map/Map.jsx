@@ -5,6 +5,7 @@ import {
   Marker,
   Popup,
   useMapEvents,
+  useMap,
 } from "react-leaflet";
 import style from "./style.module.css";
 import { joinCls } from "../../utilities/text.utilities";
@@ -91,15 +92,15 @@ function Map() {
 
   useEffect(() => {
     const markerIds = [1, 2, 3, 4]; // ID của các marker cần kiểm tra
-    const pm25Thresholds = [0, 0, 0, 0]; // Ngưỡng PM 2.5 tương ứng cho từng marker
+    const pm25Thresholds = [35, 35, 35, 35]; // Ngưỡng PM 2.5 tương ứng cho từng marker
     const pm10Thresholds = [155, 155, 155, 155]; // Ngưỡng PM 10 tương ứng cho từng marker
     const COThresholds = [40, 40, 40, 40];
     const poisonGasThresholds = [100, 100, 100, 100];
     const markerPagePathThresholds = [
-      [16.07489869581357, 108.15175951170275],
-      [16.0757176185992, 108.153703320611],
-      [16.077086462870547, 108.15213504320542],
-      [16.0759008729407, 108.15245570733465],
+      [16.09004, 108.146262],
+      [16.073119, 108.151242],
+      [16.076239, 108.126125],
+      [16.080747, 108.140488],
     ];
     const intervals = markerIds.map((markerId, index) => {
       const pm25Threshold = pm25Thresholds[index];
@@ -117,7 +118,7 @@ function Map() {
           poisonGasThreshold,
           markerPagePathThreshold
         );
-      }, 60000);
+      }, 300000);
 
       return interval;
     });
@@ -216,19 +217,24 @@ function Map() {
   //Locate
   const [location, setLocation] = useState(null);
   ////
+  const newLocation = useLocation();
+  const searchParams = new URLSearchParams(newLocation.search);
 
-  const location2 = useLocation();
-  const mapRef = useRef(null);
-  const { coordinates, zoom } = location2.state || {};
+  // Lấy giá trị các tham số từ URL
+  const lat = parseFloat(searchParams.get("lat"));
+  const lng = parseFloat(searchParams.get("lng"));
+  const zoom = parseInt(searchParams.get("zoom"));
+  function MapViewport() {
+    const map = useMap();
 
-  useEffect(() => {
-    if (coordinates && zoom) {
-      const map = mapRef.current;
-      if (map) {
-        map.setView(coordinates, zoom);
+    useEffect(() => {
+      if (lat && lng && zoom) {
+        map.flyTo([lat, lng], zoom);
       }
-    }
-  }, [coordinates, zoom]);
+    }, [lat, lng, zoom, map]);
+
+    return null;
+  }
   return (
     <div className={style["map"]}>
       <MapContainer
@@ -236,8 +242,8 @@ function Map() {
         center={[16.0544, 108.2022]}
         zoom={13}
         scrollWheelZoom={true}
-        ref={mapRef}
       >
+        <MapViewport />
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

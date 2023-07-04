@@ -36,54 +36,117 @@ function Dashboard() {
 
     fetchData();
   }, []);
-  const handlePrevDownload = (data) => {
+  const handleDataProcessingDay = (data) => {
     const newObject = {};
 
     for (let field in data) {
       const fieldArray = data[field];
-      const lastObjects = fieldArray.slice(-24); // Lấy 24 đối tượng cuối cùng của mảng
-      const modifiedObjects = lastObjects.map((obj, index) => {
-        const modifiedObj = { ...obj };
+      const lastObjects = fieldArray.slice(-1440); // Lấy 1440 đối tượng cuối cùng của mảng
+      const modifiedObjects = [];
 
-        // Thay đổi giá trị trường time từ 0h đến 23h
-        modifiedObj.time = `${index.toString().padStart(2, "0")}:00`;
+      for (let i = 0; i < 24; i++) {
+        let sum = 0;
 
-        // Đặt giá trị trường date là ngày hôm qua
-        const today = new Date();
-        const yesterday = new Date(today);
-        yesterday.setDate(today.getDate() - 1);
-        modifiedObj.date = formatDate(yesterday);
+        for (let j = i * 60; j < (i + 1) * 60; j++) {
+          sum += lastObjects[j].value;
+        }
 
-        return modifiedObj;
-      });
+        const averageValue = sum / 60;
+        const time = i.toString().padStart(2, "0") + ":00";
+        const date = getLastDayDate();
+
+        modifiedObjects.push({ value: averageValue, time, date });
+      }
+
       newObject[field] = modifiedObjects;
     }
+
     return newObject;
   };
-  function formatDate(date) {
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const day = date.getDate().toString().padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  }
+
+  const getLastDayDate = () => {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    return yesterday.toISOString().split("T")[0];
+  };
+  const handleDataProcessingWeek = (data) => {
+    const newObject = {};
+
+    for (let field in data) {
+      const fieldArray = data[field];
+      const modifiedObjects = [];
+
+      for (let i = 0; i < fieldArray.length; i += 1440) {
+        const groupObjects = fieldArray.slice(i, i + 1440);
+        const groupValues = groupObjects.map((obj) => obj.value);
+
+        const averageValues = [];
+        let sum = 0;
+        let count = 0;
+
+        for (let j = 0; j < groupValues.length; j += 60) {
+          const subGroupValues = groupValues.slice(j, j + 60);
+          const subGroupAverage =
+            subGroupValues.reduce((sum, value) => sum + value, 0) /
+            subGroupValues.length;
+
+          averageValues.push(subGroupAverage);
+
+          sum += subGroupAverage;
+          count++;
+        }
+        const minValue = Math.min(...averageValues);
+        const maxValue = Math.max(...averageValues);
+        const overallAverage = sum / count;
+
+        const date = getLastNDaysDate(i / 1440 + 1);
+
+        modifiedObjects.push({
+          date,
+          min: minValue,
+          max: maxValue,
+          average: overallAverage,
+        });
+      }
+
+      newObject[field] = modifiedObjects;
+    }
+
+    return newObject;
+  };
+
+  const getLastNDaysDate = (n) => {
+    const date = new Date();
+    date.setDate(date.getDate() - n);
+    return date.toISOString().split("T")[0];
+  };
+
   //Download data
   const handleDownload = () => {
     let data;
     if (activeComponent === "Component1") {
       if (selectedOption === "1") {
-        data = handlePrevDownload(data1);
+        data = handleDataProcessingDay(data1);
+      } else {
+        data = handleDataProcessingWeek(data1);
       }
     } else if (activeComponent === "Component2") {
       if (selectedOption === "1") {
-        data = handlePrevDownload(data2);
+        data = handleDataProcessingDay(data2);
+      } else {
+        data = handleDataProcessingWeek(data2);
       }
     } else if (activeComponent === "Component3") {
       if (selectedOption === "1") {
-        data = handlePrevDownload(data3);
+        data = handleDataProcessingDay(data3);
+      } else {
+        data = handleDataProcessingWeek(data3);
       }
     } else {
       if (selectedOption === "1") {
-        data = handlePrevDownload(data4);
+        data = handleDataProcessingDay(data4);
+      } else {
+        data = handleDataProcessingWeek(data4);
       }
     }
     const url = URL.createObjectURL(
@@ -92,7 +155,7 @@ function Dashboard() {
 
     const link = document.createElement("a");
     link.href = url;
-    link.setAttribute("download", "data.csv"); //
+    link.setAttribute("download", "data.txt"); //
     document.body.appendChild(link);
     link.click();
 
@@ -192,24 +255,32 @@ function Dashboard() {
 
             {selectedOption === "7" ? (
               <div className="">
-                {activeComponent === "Component1" && <WeekPage1 data={data1} />}
-                {activeComponent === "Component2" && <WeekPage1 data={data2} />}
-                {activeComponent === "Component3" && <WeekPage1 data={data3} />}
-                {activeComponent === "Component4" && <WeekPage1 data={data4} />}
+                {activeComponent === "Component1" && (
+                  <WeekPage1 data={handleDataProcessingWeek(data1)} />
+                )}
+                {activeComponent === "Component2" && (
+                  <WeekPage1 data={handleDataProcessingWeek(data2)} />
+                )}
+                {activeComponent === "Component3" && (
+                  <WeekPage1 data={handleDataProcessingWeek(data3)} />
+                )}
+                {activeComponent === "Component4" && (
+                  <WeekPage1 data={handleDataProcessingWeek(data4)} />
+                )}
               </div>
             ) : (
               <div>
                 {activeComponent === "Component1" && (
-                  <DUT1Page data={data1} day={24} />
+                  <DUT1Page data={handleDataProcessingDay(data1)} />
                 )}
                 {activeComponent === "Component2" && (
-                  <DUT1Page data={data2} day={24} />
+                  <DUT1Page data={handleDataProcessingDay(data2)} />
                 )}
                 {activeComponent === "Component3" && (
-                  <DUT1Page data={data3} day={24} />
+                  <DUT1Page data={handleDataProcessingDay(data3)} />
                 )}
                 {activeComponent === "Component4" && (
-                  <DUT1Page data={data4} day={24} />
+                  <DUT1Page data={handleDataProcessingDay(data4)} />
                 )}
               </div>
             )}
