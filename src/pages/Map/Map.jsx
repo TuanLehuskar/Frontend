@@ -284,7 +284,7 @@ function Map() {
         <div className="row justify-content-around">
           <div
             className={joinCls(
-              "col-2 p-2 text-white position-relative",
+              "col-lg-2 col-5 mb-lg-0 mb-3 p-2 text-white position-relative",
               style["box-wrap-1"]
             )}
           >
@@ -299,7 +299,7 @@ function Map() {
           </div>
           <div
             className={joinCls(
-              "col-2 p-2 text-white position-relative",
+              "col-lg-2 col-5 mb-lg-0 mb-3 p-2 text-white position-relative",
               style["box-wrap-2"]
             )}
           >
@@ -314,7 +314,7 @@ function Map() {
           </div>
           <div
             className={joinCls(
-              "col-2 p-2 text-white position-relative",
+              "col-lg-2 col-5 mb-lg-0 mb-3 p-2 text-white position-relative",
               style["box-wrap-3"]
             )}
           >
@@ -322,14 +322,14 @@ function Map() {
               <i className="fa-solid fa-smog me-2"></i>
               CO
             </div>
-            <div className="text-center">
+            <div className={joinCls("text-center", style["tem-text"])}>
               {dataMakers.interpolationCO || permanentData.CO}
             </div>
             <div className={style["unit-common-position"]}>ppm</div>
           </div>
           <div
             className={joinCls(
-              "col-2 p-2 text-white position-relative",
+              "col-lg-2 col-5 mb-lg-0 mb-3 p-2 text-white position-relative",
               style["box-wrap-4"]
             )}
           >
@@ -337,12 +337,14 @@ function Map() {
               <i className="fa-solid fa-virus me-2"></i>
               Poison Gas
             </div>
-            <div className="text-center">
+            <div
+              className={joinCls("text-center mt-2 mt-lg-0", style["tem-text"])}
+            >
               {dataMakers.interpolationPoisonGas || permanentData.poisonGas}
             </div>
             <div className={style["unit-common-position"]}>ppm</div>
           </div>
-          <div className={joinCls("col-3", style["box-wrap-5"])}>
+          <div className={joinCls("col-lg-3 col-9", style["box-wrap-5"])}>
             <div className="row">
               <div
                 className={joinCls(
@@ -357,7 +359,12 @@ function Map() {
                   )}
                 ></i>
                 Temperature
-                <div className={joinCls("text-center", style["tem-text"])}>
+                <div
+                  className={joinCls(
+                    "text-center mt-2 mt-lg-0",
+                    style["tem-text"]
+                  )}
+                >
                   {dataMakers.interpolationTemperature ||
                     permanentData.temperature}
                 </div>
@@ -373,7 +380,12 @@ function Map() {
                   className={joinCls("fa-solid fa-droplet me-3", style["icon"])}
                 ></i>
                 Humidity
-                <div className={joinCls("text-center", style["tem-text"])}>
+                <div
+                  className={joinCls(
+                    "text-center mt-2 mt-lg-0",
+                    style["tem-text"]
+                  )}
+                >
                   {dataMakers.interpolationHumidity || permanentData.humidity}
                 </div>
                 <div className={style["unit-position"]}>%</div>

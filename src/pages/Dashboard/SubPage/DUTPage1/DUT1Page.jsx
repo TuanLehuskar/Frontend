@@ -11,7 +11,12 @@ function DUT1Page(props) {
   return (
     <div className="overflow-hidden">
       <div className="row justify-content-around pt-5">
-        <div className={joinCls("col-5", style["dashboard-component"])}>
+        <div
+          className={joinCls(
+            "col-lg-5 col-12 mb-5 mb-lg-0",
+            style["dashboard-component"]
+          )}
+        >
           {data.temperature && (
             <LineChart
               data={data.temperature}
@@ -23,7 +28,9 @@ function DUT1Page(props) {
           )}
           <p className="text-center mb-0 mt-2 fw-bold">Nhiệt độ</p>
         </div>
-        <div className={joinCls("col-5", style["dashboard-component"])}>
+        <div
+          className={joinCls("col-lg-5 col-12", style["dashboard-component"])}
+        >
           {data.humidity && (
             <LineChart
               data={data.humidity}
@@ -37,7 +44,12 @@ function DUT1Page(props) {
         </div>
       </div>
       <div className="row justify-content-around mt-5 pb-5">
-        <div className={joinCls("col-5", style["dashboard-component"])}>
+        <div
+          className={joinCls(
+            "col-lg-5 col-12 mb-5 mb-lg-0",
+            style["dashboard-component"]
+          )}
+        >
           {data.pm25 && (
             <LineChart
               data={data.pm25}
@@ -51,7 +63,9 @@ function DUT1Page(props) {
             Nồng độ bụi mịn PM 2.5
           </p>
         </div>
-        <div className={joinCls("col-5", style["dashboard-component"])}>
+        <div
+          className={joinCls("col-lg-5 col-12", style["dashboard-component"])}
+        >
           {data.pm10 && (
             <LineChart
               data={data.pm10}
@@ -64,8 +78,13 @@ function DUT1Page(props) {
           <p className="text-center mb-0 mt-2 fw-bold">Nồng độ bụi mịn PM 10</p>
         </div>
       </div>
-      <div className="row justify-content-around mt-5 pb-5">
-        <div className={joinCls("col-5", style["dashboard-component"])}>
+      <div className="row justify-content-around mt-lg-5 mt-0 pb-5">
+        <div
+          className={joinCls(
+            "col-lg-5 col-12 mb-5 mb-lg-0",
+            style["dashboard-component"]
+          )}
+        >
           {data.CO && (
             <LineChart
               data={data.CO}
@@ -77,7 +96,9 @@ function DUT1Page(props) {
           )}
           <p className="text-center mb-0 mt-2 fw-bold">Nồng độ khí CO</p>
         </div>
-        <div className={joinCls("col-5", style["dashboard-component"])}>
+        <div
+          className={joinCls("col-lg-5 col-12", style["dashboard-component"])}
+        >
           {data.poisonGas && (
             <LineChart
               data={data.poisonGas}

@@ -3,6 +3,7 @@
 }
 .main-bg {
   min-height: 100vh;
+  overflow: hidden;
 }
 
 .bg-img {
@@ -32,6 +33,18 @@
 }
 .about-btn:hover a {
   color: #10afa0;
+}
+.discover-btn {
+  background: #10afa0;
+  padding: 0.8rem;
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  border: 2px solid white;
+}
+.discover-btn:hover {
+  color: #10afa0;
+  background: white;
 }
 .features {
   margin-top: 10rem;
@@ -97,4 +110,51 @@
 .logo-2 {
   width: 100px;
   height: 100px;
+}
+.feature-intro {
+  font-size: 1.25rem;
+}
+.feature-name {
+  font-size: 2rem;
+}
+@media (max-width: 767px) {
+  .about-us {
+    margin-top: 1rem;
+  }
+  .features {
+    margin-top: 3rem;
+  }
+  .hover-scroll-component .content {
+    transition: transform 0.5s ease;
+    transform: translateY(100%);
+  }
+  .hover-scroll-component:hover .image-container {
+    transform: translateY(-140%);
+  }
+
+  .hover-scroll-component:hover .content {
+    transform: translateY(-140%);
+  }
+  .about-btn a {
+    width: 1rem;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  .discover-btn {
+    padding: 0.8rem;
+    font-size: 1rem;
+    border: 1px solid white;
+  }
+  .intro-img {
+    width: 150px;
+    height: 150px;
+  }
+  .logo-1 {
+    width: 135px;
+    height: 130px;
+  }
+  .about-us-intro {
+    font-size: 1rem;
+  }
 }

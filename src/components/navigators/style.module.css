@@ -93,3 +93,10 @@ input:checked ~ .navigator-container .toggle-icon {
   display: none;
   z-index: 2;
 }
+@media (max-width: 767px) {
+  .close-icon,
+  .toggle-icon {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}

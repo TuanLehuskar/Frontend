@@ -86,3 +86,21 @@
   border-radius: 0px 12px 12px 0px;
   color: white;
 }
+
+@media (max-width: 767px) {
+  .box-wrap-1 {
+    font-size: 1.2rem;
+  }
+  .box-wrap-2 {
+    font-size: 1.2rem;
+  }
+  .box-wrap-3 {
+    font-size: 1.3rem;
+  }
+  .box-wrap-4 {
+    font-size: 1rem;
+  }
+  .box-wrap-5 {
+    font-size: 0.9rem;
+  }
+}

@@ -48,11 +48,11 @@ function Warning() {
     <div className="container">
       <div
         className={joinCls(
-          "d-flex align-items-center justify-content-around mt-2",
+          "row align-items-center justify-content-around mt-lg-2",
           style["warning-wrap"]
         )}
       >
-        <div className="d-flex align-items-center">
+        <div className="col-12 col-lg-6 align-items-center">
           <DistrictSelector
             districts={mockData}
             selectedDistrict={selectedDistrict}
@@ -60,13 +60,16 @@ function Warning() {
             onChangeDistrict={handleDistrictChange}
             onChangeWard={handleWardChange}
           />
-          <button className={style["clear-btn"]} onClick={handleReset}>
-            <i className="fa-solid fa-arrow-rotate-right"></i>
-          </button>
         </div>
         <button
+          className={joinCls("col-8 col-lg-2 mt-3", style["clear-btn"])}
+          onClick={handleReset}
+        >
+          <i className="fa-solid fa-arrow-rotate-right"></i>
+        </button>
+        <button
           onClick={handleClearLocalStorage}
-          className={style["clear-btn"]}
+          className={joinCls("col-8 col-lg-2 mt-3", style["clear-btn"])}
         >
           Xóa lịch sử
         </button>
@@ -74,13 +77,8 @@ function Warning() {
       <div className="">
         <div>
           {!selectedDistrict || !selectedWard ? (
-            <div
-              className={joinCls(
-                "d-flex mx-3 justify-content-between align-items-center my-3 p-3",
-                style["warning-component"]
-              )}
-            >
-              <p className="mb-0">Vui lòng chọn khu vực</p>
+            <div className={joinCls("m-3 p-3", style["warning-component"])}>
+              <p className="mb-0 text-center">Vui lòng chọn khu vực</p>
             </div>
           ) : selectedDistrict === "quan_lien_chieu" &&
             selectedWard === "phuong_hoa_khanh_bac" ? (

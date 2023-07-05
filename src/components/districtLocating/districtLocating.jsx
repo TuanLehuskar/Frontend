@@ -18,8 +18,8 @@ class DistrictSelector extends React.Component {
     const wards = district ? district.wards : [];
 
     return (
-      <div className="d-flex">
-        <div className="">
+      <div className="d-flex row">
+        <div className="col-lg-5 col-12">
           <label
             className={joinCls("me-1", style["label-1"])}
             htmlFor="district"
@@ -40,8 +40,8 @@ class DistrictSelector extends React.Component {
           </select>
         </div>
 
-        <div className=" ms-3">
-          <label className={joinCls("me-1", style["label-1"])} htmlFor="ward">
+        <div className="col-lg-5 col-12 mt-lg-0 mt-2">
+          <label className={joinCls("me-3", style["label-1"])} htmlFor="ward">
             Phường/Xã:
           </label>
           <select
