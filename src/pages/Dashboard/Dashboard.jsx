@@ -9,7 +9,7 @@ import mockData from "../../components/mockData";
 import WeekPage1 from "./WeekPage/WeekPage1/WeekPage1.jsx";
 function Dashboard() {
   const [activeComponent, setActiveComponent] = useState("Component1");
-
+  const [isLoading, setIsLoading] = useState(true);
   const handleComponentClick = (componentName) => {
     setActiveComponent(componentName);
   };
@@ -183,7 +183,7 @@ function Dashboard() {
   return (
     <div className={joinCls("", style["dashboard"])}>
       <div className="container">
-        <div className="pt-5 d-flexs">
+        <div className="pt-5">
           <DistrictSelector
             districts={mockData}
             selectedDistrict={selectedDistrict}
@@ -192,111 +192,134 @@ function Dashboard() {
             onChangeWard={handleWardChange}
           />
         </div>
-        <div className="">
-          {!selectedDistrict || !selectedWard ? (
-            <div
-              className={joinCls(
-                "container d-flex justify-content-between align-items-center",
-                style[""]
-              )}
-            >
-              <p className="mb-0">Vui lòng chọn khu vực</p>
-            </div>
-          ) : selectedDistrict === "quan_lien_chieu" &&
-            selectedWard === "phuong_hoa_khanh_bac" ? (
-            <div className="mt-3">
-              <button
-                onClick={() => handleComponentClick("Component1")}
-                className={
-                  activeComponent === "Component1" ? style["active"] : style[""]
-                }
+        {
+          <div className="">
+            {!selectedDistrict || !selectedWard ? (
+              <div
+                className={joinCls(
+                  "container d-flex justify-content-between align-items-center",
+                  style[""]
+                )}
               >
-                HKB-1
-              </button>
-              <button
-                onClick={() => handleComponentClick("Component2")}
-                className={
-                  activeComponent === "Component2" ? style["active"] : style[""]
-                }
-              >
-                HKB-2
-              </button>
-              <button
-                onClick={() => handleComponentClick("Component3")}
-                className={
-                  activeComponent === "Component3" ? style["active"] : style[""]
-                }
-              >
-                HKB-3
-              </button>
-              <button
-                onClick={() => handleComponentClick("Component4")}
-                className={
-                  activeComponent === "Component4" ? style["active"] : style[""]
-                }
-              >
-                HKB-Center
-              </button>
+                <p className="mb-0">Vui lòng chọn khu vực</p>
+              </div>
+            ) : selectedDistrict === "quan_lien_chieu" &&
+              selectedWard === "phuong_hoa_khanh_bac" ? (
+              Object.keys(data1).length !== 0 ? (
+                <div className="mt-3">
+                  <button
+                    onClick={() => handleComponentClick("Component1")}
+                    className={
+                      activeComponent === "Component1"
+                        ? style["active"]
+                        : style[""]
+                    }
+                  >
+                    HKB-1
+                  </button>
+                  <button
+                    onClick={() => handleComponentClick("Component2")}
+                    className={
+                      activeComponent === "Component2"
+                        ? style["active"]
+                        : style[""]
+                    }
+                  >
+                    HKB-2
+                  </button>
+                  <button
+                    onClick={() => handleComponentClick("Component3")}
+                    className={
+                      activeComponent === "Component3"
+                        ? style["active"]
+                        : style[""]
+                    }
+                  >
+                    HKB-3
+                  </button>
+                  <button
+                    onClick={() => handleComponentClick("Component4")}
+                    className={
+                      activeComponent === "Component4"
+                        ? style["active"]
+                        : style[""]
+                    }
+                  >
+                    HKB-Center
+                  </button>
 
-              <select
-                className="ms-1 me-3 mt-lg-0 mt-3"
-                value={selectedOption}
-                onChange={handleOptionChange}
-              >
-                <option value="1">1 ngày</option>
-                <option value="7">7 ngày</option>
-              </select>
-              <button
-                className={style["download-btn"]}
-                onClick={handleDownload}
-                disabled={Object.keys(data1).length !== 0 ? false : true}
-              >
-                Tải xuống dữ liệu
-              </button>
+                  <select
+                    className="ms-1 me-3 mt-lg-0 mt-3"
+                    value={selectedOption}
+                    onChange={handleOptionChange}
+                  >
+                    <option value="1">1 ngày</option>
+                    <option value="7">7 ngày</option>
+                  </select>
+                  <button
+                    className={style["download-btn"]}
+                    onClick={handleDownload}
+                    disabled={Object.keys(data1).length !== 0 ? false : true}
+                  >
+                    Tải xuống dữ liệu
+                  </button>
 
-              {selectedOption === "7" ? (
-                <div className="">
-                  {activeComponent === "Component1" && (
-                    <WeekPage1 data={handleDataProcessingWeek(data1)} />
-                  )}
-                  {activeComponent === "Component2" && (
-                    <WeekPage1 data={handleDataProcessingWeek(data2)} />
-                  )}
-                  {activeComponent === "Component3" && (
-                    <WeekPage1 data={handleDataProcessingWeek(data3)} />
-                  )}
-                  {activeComponent === "Component4" && (
-                    <WeekPage1 data={handleDataProcessingWeek(data4)} />
+                  {selectedOption === "7" ? (
+                    <div className="">
+                      {activeComponent === "Component1" && (
+                        <WeekPage1 data={handleDataProcessingWeek(data1)} />
+                      )}
+                      {activeComponent === "Component2" && (
+                        <WeekPage1 data={handleDataProcessingWeek(data2)} />
+                      )}
+                      {activeComponent === "Component3" && (
+                        <WeekPage1 data={handleDataProcessingWeek(data3)} />
+                      )}
+                      {activeComponent === "Component4" && (
+                        <WeekPage1 data={handleDataProcessingWeek(data4)} />
+                      )}
+                    </div>
+                  ) : (
+                    <div>
+                      {activeComponent === "Component1" && (
+                        <DUT1Page data={handleDataProcessingDay(data1)} />
+                      )}
+                      {activeComponent === "Component2" && (
+                        <DUT1Page data={handleDataProcessingDay(data2)} />
+                      )}
+                      {activeComponent === "Component3" && (
+                        <DUT1Page data={handleDataProcessingDay(data3)} />
+                      )}
+                      {activeComponent === "Component4" && (
+                        <DUT1Page data={handleDataProcessingDay(data4)} />
+                      )}
+                    </div>
                   )}
                 </div>
               ) : (
-                <div>
-                  {activeComponent === "Component1" && (
-                    <DUT1Page data={handleDataProcessingDay(data1)} />
+                <div
+                  className={joinCls(
+                    "d-flex justify-content-center align-items-center",
+                    style["loading"]
                   )}
-                  {activeComponent === "Component2" && (
-                    <DUT1Page data={handleDataProcessingDay(data2)} />
-                  )}
-                  {activeComponent === "Component3" && (
-                    <DUT1Page data={handleDataProcessingDay(data3)} />
-                  )}
-                  {activeComponent === "Component4" && (
-                    <DUT1Page data={handleDataProcessingDay(data4)} />
-                  )}
+                >
+                  <div className="spinner-border text-success" role="status">
+                    <span className="sr-only">Loading...</span>
+                  </div>
                 </div>
-              )}
-            </div>
-          ) : (
-            <div
-              className={joinCls(
-                "container d-flex justify-content-between align-items-center",
-                style[""]
-              )}
-            >
-              <p className="mb-0">Khu vực chưa khả thi</p>
-            </div>
-          )}
-        </div>
+              )
+            ) : (
+              <div
+                className={joinCls(
+                  "container d-flex justify-content-between align-items-center",
+                  style[""]
+                )}
+              >
+                <p className="mb-0">Khu vực chưa khả thi</p>
+              </div>
+            )}
+          </div>
+        }
       </div>
     </div>
   );

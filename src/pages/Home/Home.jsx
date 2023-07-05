@@ -93,7 +93,7 @@ function HomePage() {
                 <div
                   className={joinCls(
                     "text-white text-center",
-                    style["content"]
+                    style["content-war"]
                   )}
                 >
                   <div
@@ -104,8 +104,8 @@ function HomePage() {
                   <div
                     className={joinCls("mb-lg-4 mb-3", style["feature-intro"])}
                   >
-                    A map to display and access data for locations within the
-                    urban area
+                    The map for easy viewing of air quality metrics at any
+                    location within the urban area
                   </div>
                   <Link
                     className={joinCls("", style["discover-btn"])}
@@ -141,7 +141,7 @@ function HomePage() {
                   <div
                     className={joinCls("mb-lg-4 mb-3", style["feature-intro"])}
                   >
-                    Visualization of collected data on air quality
+                    The visualization of collected data on air quality metrics
                   </div>
                   <Link
                     className={joinCls("", style["discover-btn"])}
@@ -166,15 +166,15 @@ function HomePage() {
                 <div
                   className={joinCls(
                     "text-white text-center",
-                    style["content"]
+                    style["content-war"]
                   )}
                 >
                   <div className={joinCls("mb-0", style["feature-name"])}>
                     Warning
                   </div>
                   <div className={joinCls("mb-3", style["feature-intro"])}>
-                    A system for storing areas with air pollution levels harmful
-                    to human health
+                    The system stores information about locations with air
+                    pollution levels that are harmful to human health
                   </div>
                   <Link
                     className={joinCls("", style["discover-btn"])}

@@ -2,7 +2,6 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { EnvironmentPlugin } = require("webpack");
 const dotEnv = require("dotenv");
-
 if (process.env.NODE_ENV == "production") {
   dotEnv.config({ path: "./config.env" });
 } else {
@@ -28,7 +27,7 @@ module.exports = {
         use: ["style-loader", "css-loader"],
       },
       {
-        test: /\.png|svg|jpg|gif$/,
+        test: /\.png|svg|jpg|jpeg|gif|ico$/,
         use: ["file-loader"],
       },
     ],
@@ -40,6 +39,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: "./public/index.html",
+      favicon: "./public/favicon_io/favicon.ico",
     }),
     new EnvironmentPlugin({
       HOST: process.env.HOST,

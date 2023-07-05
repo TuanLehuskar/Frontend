@@ -64,7 +64,7 @@
 .hover-scroll-component .image-container {
   transition: transform 0.5s ease;
 }
-
+.hover-scroll-component .content-war,
 .hover-scroll-component .content {
   transition: transform 0.5s ease;
   transform: translateY(200%);
@@ -73,7 +73,9 @@
 .hover-scroll-component:hover .image-container {
   transform: translateY(-120%);
 }
-
+.hover-scroll-component:hover .content-war {
+  transform: translateY(-108%);
+}
 .hover-scroll-component:hover .content {
   transform: translateY(-120%);
 }
@@ -124,6 +126,7 @@
   .features {
     margin-top: 3rem;
   }
+  .hover-scroll-component .content-war,
   .hover-scroll-component .content {
     transition: transform 0.5s ease;
     transform: translateY(100%);
@@ -131,7 +134,9 @@
   .hover-scroll-component:hover .image-container {
     transform: translateY(-140%);
   }
-
+  .hover-scroll-component:hover .content-war {
+    transform: translateY(-120%);
+  }
   .hover-scroll-component:hover .content {
     transform: translateY(-140%);
   }
