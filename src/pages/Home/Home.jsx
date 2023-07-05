@@ -1,4 +1,4 @@
-import React, { useState } from "react"; // nạp thư viện react
+import React, { useEffect, useState } from "react"; // nạp thư viện react
 import { Link } from "react-router-dom";
 import style from "./style.module.css";
 import { joinCls } from "../../utilities/text.utilities";
@@ -11,12 +11,28 @@ import { DASHBOARD_PAGE_PATH } from "../Dashboard/constant";
 import { WARNING_PAGE_PATH } from "../Warning/constant";
 import TuanImg from "./images/tuan.jpg";
 import ThienImg from "./images/thien.jpg";
+import BKImg from "./images/logoBK.jpg";
+import DienImg from "./images/logoDien.png";
+import axios from "axios";
+
 function HomePage() {
   const [isHovered, setIsHovered] = useState(false);
 
   const handleHover = () => {
     setIsHovered(!isHovered);
   };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${process.env.HOST}`);
+        console.log(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, []);
   return (
     <>
       <div className={joinCls("", style["main-bg"])}>
@@ -154,19 +170,60 @@ function HomePage() {
             About us
           </h1>
           <div className="row mt-5 justify-content-around align-items-center">
-            <div className="col-3">
+            <div className="col-3 d-flex flex-column align-items-center">
               <img src={TuanImg} alt="" className={style["intro-img"]} />
+              <p className={joinCls("mt-3", style["intro-name"])}>
+                Le Phuoc Anh Tuan
+              </p>
+              <p className={joinCls("", style["intro-title"])}>
+                Control Engineering & Automation
+              </p>
             </div>
-            <div
-              className={joinCls("col-3 text-center", style["about-us-intro"])}
-            >
-              We are senior students at the University of Science and Technology
-              - The University of Danang. This product is our graduation project
-              aiming to build a tool to assist the community and support the
-              residents.
+            <div className={joinCls("col-3", style["about-us-intro"])}>
+              We are senior students at the Faculty of Electrical Engineering in
+              University of Science and Technology - The University of Danang.
+              This product is our graduation project aimed at building a tool to
+              assist the community and support the residents.
             </div>
-            <div className="col-3">
+            <div className="col-3 d-flex flex-column align-items-center">
               <img src={ThienImg} alt="" className={style["intro-img"]} />
+              <p className={joinCls("mt-3", style["intro-name"])}>
+                Nguyen Hoang Thien
+              </p>
+              <p className={joinCls("", style["intro-title"])}>
+                Control Engineering & Automation
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className={joinCls("", style["footer"])}>
+        <div className="container py-4 text-white">
+          <div className="row">
+            <div className="col-6 justify-content-center">
+              <p className="mb-0 text-center">
+                <span className="fw-bold">Supervisor/Advisor:</span> Ph.D.
+                Nguyen Thi Thanh Quynh
+              </p>
+              <div className="row">
+                <div className="col-6 d-flex justify-content-around align-items-center">
+                  <img src={DienImg} alt="" className={style["logo-1"]} />
+                  <img src={BKImg} alt="" className={style["logo-2"]} />
+                </div>
+              </div>
+            </div>
+            <div className="col-6">
+              <p className="text-center fw-bold">CONTACT</p>
+              <div className="row">
+                <p>
+                  <i className="fa-solid fa-square-phone me-2"></i>
+                  0935114910 - 0888929846
+                </p>
+                <p>
+                  <i className="fa-solid fa-envelope me-2"></i>{" "}
+                  tl28072001@gmail.com - nhthien0984@gmail.com{" "}
+                </p>
+              </div>
             </div>
           </div>
         </div>

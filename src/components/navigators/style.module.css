@@ -1,7 +1,7 @@
 .navigator-container {
   height: 100%;
   width: 250px;
-  position: absolute;
+  position: fixed;
   background: #161616;
   z-index: 10;
   transition: 0.5s ease;
@@ -57,7 +57,7 @@ input {
 }
 
 .close-icon {
-  position: absolute;
+  position: fixed;
   right: -40px;
   top: 110px;
   font-size: 25px;
@@ -69,7 +69,7 @@ input {
 }
 
 .toggle-icon {
-  position: absolute;
+  position: fixed;
   right: -40px;
   top: 110px;
   font-size: 25px;
