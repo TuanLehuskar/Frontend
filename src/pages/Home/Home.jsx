@@ -13,6 +13,7 @@ import TuanImg from "./images/tuan.jpg";
 import ThienImg from "./images/thien.jpg";
 import BKImg from "./images/logoBK.jpg";
 import DienImg from "./images/logoDien.png";
+import Nature from "./images/Nature.png";
 import axios from "axios";
 
 function HomePage() {
@@ -245,16 +246,25 @@ function HomePage() {
               </div>
             </div>
             <div className="col-lg-6 col-12">
-              <p className="text-center fw-bold">CONTACT</p>
-              <div className="row text-center text-lg-start">
-                <p>
-                  <i className="fa-solid fa-square-phone me-2"></i>
-                  0935114910 - 0888929846
-                </p>
-                <p>
-                  <i className="fa-solid fa-envelope me-2"></i>{" "}
-                  tl28072001@gmail.com - nhthien0984@gmail.com{" "}
-                </p>
+              <p className="text-center fw-bold">CONTACT US</p>
+              <div className="row text-center text-lg-start align-items-center">
+                <div className="col-lg-6 col-12 order-lg-1 order-2 mt-3 mt-lg-0">
+                  <p>
+                    <i className="fa-solid fa-square-phone me-2"></i>
+                    0935114910 - 0888929846
+                  </p>
+                  <p>
+                    <i className="fa-solid fa-envelope me-2"></i>{" "}
+                    tl28072001@gmail.com - nhthien0984@gmail.com{" "}
+                  </p>
+                </div>
+                <div className="col-lg-6 col-12 order-lg-2 order-1 d-flex justify-content-center">
+                  <img
+                    src={Nature}
+                    className={joinCls("", style["team-logo"])}
+                    alt=""
+                  />
+                </div>
               </div>
             </div>
           </div>
