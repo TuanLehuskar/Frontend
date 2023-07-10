@@ -21,12 +21,12 @@ function Map() {
   const markers = [
     {
       id: 1,
-      geoCode: [16.09004, 108.146262],
+      geoCode: [16.076344, 108.15216],
       popup: "HKB-1",
     },
     {
       id: 2,
-      geoCode: [16.073119, 108.151242],
+      geoCode: [16.09004, 108.146262],
       popup: "HKB-2",
     },
     {
@@ -92,10 +92,10 @@ function Map() {
 
   useEffect(() => {
     const markerIds = [1, 2, 3, 4]; // ID của các marker cần kiểm tra
-    const pm25Thresholds = [35, 35, 35, 35]; // Ngưỡng PM 2.5 tương ứng cho từng marker
+    const pm25Thresholds = [36, 36, 36, 36]; // Ngưỡng PM 2.5 tương ứng cho từng marker
     const pm10Thresholds = [155, 155, 155, 155]; // Ngưỡng PM 10 tương ứng cho từng marker
-    const COThresholds = [40, 40, 40, 40];
-    const poisonGasThresholds = [100, 100, 100, 100];
+    const COThresholds = [100, 100, 100, 100];
+    const poisonGasThresholds = [50, 50, 50, 50];
     const markerPagePathThresholds = [
       [16.09004, 108.146262],
       [16.073119, 108.151242],

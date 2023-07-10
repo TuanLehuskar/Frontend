@@ -41,17 +41,17 @@ function Dashboard() {
 
     for (let field in data) {
       const fieldArray = data[field];
-      const lastObjects = fieldArray.slice(-1440); // Lấy 1440 đối tượng cuối cùng của mảng
+      const lastObjects = fieldArray.slice(-288); // Lấy 1440 đối tượng cuối cùng của mảng
       const modifiedObjects = [];
 
       for (let i = 0; i < 24; i++) {
         let sum = 0;
 
-        for (let j = i * 60; j < (i + 1) * 60; j++) {
+        for (let j = i * 12; j < (i + 1) * 12; j++) {
           sum += lastObjects[j].value;
         }
 
-        const averageValue = sum / 60;
+        const averageValue = sum / 12;
         const time = i.toString().padStart(2, "0") + ":00";
         const date = getLastDayDate();
 
@@ -76,30 +76,34 @@ function Dashboard() {
       const fieldArray = data[field];
       const modifiedObjects = [];
 
-      for (let i = 0; i < fieldArray.length; i += 1440) {
-        const groupObjects = fieldArray.slice(i, i + 1440);
+      const groupSize = 2016 / 7; // Kích thước của mỗi nhóm (1 tuần: 2016 đối tượng)
+      const subgroupSize = 2016 / (7 * 12); // Kích thước của mỗi phân nhóm (1 ngày: 12 đối tượng)
+
+      for (let i = 0; i < fieldArray.length; i += groupSize) {
+        const groupObjects = fieldArray.slice(i, i + groupSize);
         const groupValues = groupObjects.map((obj) => obj.value);
 
         const averageValues = [];
         let sum = 0;
         let count = 0;
 
-        for (let j = 0; j < groupValues.length; j += 60) {
-          const subGroupValues = groupValues.slice(j, j + 60);
-          const subGroupAverage =
-            subGroupValues.reduce((sum, value) => sum + value, 0) /
-            subGroupValues.length;
+        for (let j = 0; j < groupValues.length; j += subgroupSize) {
+          const subgroupValues = groupValues.slice(j, j + subgroupSize);
+          const subgroupAverage =
+            subgroupValues.reduce((sum, value) => sum + value, 0) /
+            subgroupValues.length;
 
-          averageValues.push(subGroupAverage);
+          averageValues.push(subgroupAverage);
 
-          sum += subGroupAverage;
+          sum += subgroupAverage;
           count++;
         }
+
         const minValue = Math.min(...averageValues);
         const maxValue = Math.max(...averageValues);
         const overallAverage = sum / count;
 
-        const date = getLastNDaysDate(i / 1440 + 1);
+        const date = getLastNDaysDate(i / groupSize + 1);
 
         modifiedObjects.push({
           date,

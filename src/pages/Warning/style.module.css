@@ -23,8 +23,30 @@
 }
 
 .warning-box {
-  border: 2px solid #9ad1aa;
+  border: 2px solid #ffd7be;
   padding: 1rem;
-  margin: 1rem 0;
+  margin: 0.4rem 0;
   background: #ffd7be;
+}
+
+.move-btn {
+  border: 1px solid #469b4c;
+  padding: 4px;
+  background: white;
+  color: #469b4c;
+  text-decoration: none;
+}
+
+.move-btn:hover {
+  background: #469b4c;
+  color: white;
+}
+
+@media (max-width: 767px) {
+  .warning-box {
+    font-size: 14px;
+  }
+  .move-btn {
+    margin-left: 14px;
+  }
 }

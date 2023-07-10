@@ -1,4 +1,4 @@
-import React, { useState } from "react"; // nạp thư viện react
+import React, { useRef, useState, useEffect } from "react"; // nạp thư viện react
 import ReactDOM from "react-dom/client"; // nạp thư viện react-dom
 import { joinCls } from "../../utilities/text.utilities";
 import style from "./style.module.css";
@@ -11,10 +11,30 @@ import { DUT_1_PAGE_PATH } from "../../pages/Dashboard/SubPage/DUTPage1/constant
 import { HOME_PAGE_PATH } from "../../pages/Home/constants";
 
 function Navigator() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleToggle = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const handleClickOutside = () => {
+    setIsOpen(false);
+  };
   return (
     <div>
-      <input type="checkbox" id="check" />
-      <div className={joinCls("", style["navigator-container"])}>
+      <input
+        type="checkbox"
+        id="check"
+        checked={isOpen}
+        onChange={handleToggle}
+      />
+      <div
+        onClick={handleClickOutside}
+        className={joinCls(
+          style["navigator-container"],
+          isOpen && style["open"]
+        )}
+      >
         <label htmlFor="check">
           <span
             className={joinCls(
