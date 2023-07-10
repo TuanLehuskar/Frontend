@@ -4,7 +4,7 @@ const today = new Date();
 const sevenDaysAgo = [];
 for (let i = 6; i >= 0; i--) {
   const day = new Date(today);
-  day.setDate(today.getDate() - i);
+  day.setDate(today.getDate() - i - 1);
 
   // Lấy thông tin ngày, tháng, năm
   const date = day.getDate();

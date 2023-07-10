@@ -107,9 +107,9 @@ function Dashboard() {
 
         modifiedObjects.push({
           date,
-          min: minValue,
-          max: maxValue,
-          average: overallAverage,
+          min: Math.round(minValue),
+          max: Math.round(maxValue),
+          average: Math.round(overallAverage),
         });
       }
 
